@@ -107,7 +107,7 @@ h1{font-size:18px;font-weight:700;letter-spacing:-.2px}
 .dd-opt.sel .meta{color:var(--brand)}
 .dd-empty{padding:14px;text-align:center;color:var(--muted);font-size:12px}
 .dd-backdrop{display:none}
-@media(max-width:680px){
+@media screen and (max-width:680px){
   .dd-backdrop{position:fixed;inset:0;background:rgba(8,16,28,.45);z-index:110;
     opacity:0;visibility:hidden;transition:.18s}
   .dd-backdrop.on{display:block;opacity:1;visibility:visible}
@@ -350,16 +350,16 @@ body.sb-collapsed .sb-foot{opacity:0;padding-block:0;height:0;border:0}
   backdrop-filter:blur(2px);
 }
 body.sb-open .sb-back{opacity:1;visibility:visible}
-@media(min-width:1281px){.sb-back{display:none}}
+@media screen and (min-width:1281px){.sb-back{display:none}}
 
 /* ── تباين عالٍ ── */
-@media (prefers-contrast:more){
+@media screen and (prefers-contrast:more){
   .sb-item.on{outline:2px solid var(--brand);outline-offset:-2px}
   .sidebar{border-left-width:2px}
   .sb-item:hover{outline:1px solid var(--line);outline-offset:-1px}
 }
 /* ── تقليل الحركة ── */
-@media (prefers-reduced-motion:reduce){
+@media screen and (prefers-reduced-motion:reduce){
   .sidebar,main,.filters,.sb-item,.sb-lb,.sb-cap,.sb-ind,.sb-ic,.sb-tip,.sb-foot{
     transition:none!important}
 }
@@ -467,6 +467,7 @@ body.f-open .f-chev{transform:rotate(180deg)}
 }
 .toast.on{opacity:1; transform:translateX(50%) translateY(0)}
 [data-theme="dark"] .toast{background:#E8EDF5;color:#0C1420}
+.ver{font-size:10px;font-weight:700;color:#8AA3BD;border:1px solid #C9D4E0;border-radius:8px;padding:1px 7px;vertical-align:middle;margin-inline-start:6px}
 
 /* ── مسرح الطباعة (مخفي على الشاشة) ── */
 #printStage{display:none}
@@ -541,6 +542,10 @@ body.f-open .f-chev{transform:rotate(180deg)}
   td{border-bottom:1px solid #ddd;padding:4px 6px}
   .pri-2,.pri-3{display:table-cell!important}
   .col-exp,.det-row{display:none!important}
+  /* درع الجوال: لا كسر حرفيًا للكلمات ولا تخطيط مضغوط على الورق إطلاقًا */
+  table{table-layout:auto!important;min-width:0!important}
+  th,td{overflow-wrap:normal!important;word-break:normal!important}
+  td b,td .num{overflow-wrap:normal!important}
   .bar{display:none}
 
   /* ─ المؤشرات ─ */
@@ -571,7 +576,7 @@ body.f-open .f-chev{transform:rotate(180deg)}
 }
 [data-report]:hover .rep-acts,
 [data-report]:focus-within .rep-acts{opacity:1;transform:none}
-@media (hover:none), (max-width:699px){             /* اللمس + الشاشات الضيقة */
+@media screen and (hover:none), screen and (max-width:699px){             /* اللمس + الشاشات الضيقة */
   .rep-acts{opacity:1;transform:none}                /* دائمًا ظاهرة */
   [data-report], .card[data-report], .grid[data-report]{
     padding-top:48px}                                /* مساحة محجوزة — لا تغطية للمحتوى
@@ -596,7 +601,7 @@ body.f-open .f-chev{transform:rotate(180deg)}
 .ra:focus-visible{outline:2px solid var(--brand);outline-offset:1px}
 .ra-xls:hover{border-color:var(--ok);color:var(--ok)}
 .ra-pdf:hover{border-color:var(--bad);color:var(--bad)}
-@media(max-width:559px){ .ra span{display:none} .ra{padding:6px} }
+@media screen and (max-width:559px){ .ra span{display:none} .ra{padding:6px} }
 
 /* ═══════════════════════════════════════════════════════════════
    الطباعة — العزل الكامل
@@ -648,6 +653,9 @@ body.f-open .f-chev{transform:rotate(180deg)}
   display:flex;gap:6px;flex-wrap:wrap;padding:11px 14px;margin-bottom:18px;
   background:var(--card);border:1px solid var(--line);border-radius:12px;
   position:sticky;top:calc(var(--hdr-h) + 8px);z-index:60;
+}
+@media screen and (max-width:899px){
+  .rep-nav{position:static}                /* الترويسة ساكنة على الجوال → لا لصق يطفو فوق المحتوى */
 }
 .rep-nav a{
   padding:6px 11px;border-radius:8px;font-size:12.5px;font-weight:600;
@@ -709,8 +717,12 @@ th.col-exp,td.col-exp{display:none;width:36px;padding:6px 4px;text-align:center}
 tr.row.open .exp-btn{transform:rotate(180deg);background:var(--brand);color:#fff;border-color:var(--brand)}
 
 /* صف التفاصيل */
-tr.det-row{display:none}
-tr.det-row>td{padding:0;background:var(--bg);border-bottom:1px solid var(--line)}
+tr.det-row>td{padding:0;background:var(--bg);border-bottom:0}
+.dwrap{display:grid;grid-template-rows:0fr;transition:grid-template-rows .28s ease}
+.dwrap>div{overflow:hidden;min-height:0}
+tr.row.open+tr.det-row>td{border-bottom:1px solid var(--line)}
+tr.row.open+tr.det-row .dwrap{grid-template-rows:1fr}
+@media screen and (prefers-reduced-motion:reduce){.dwrap{transition:none}}
 .det-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
   gap:9px 14px;padding:12px 14px}
 .det-item{display:flex;flex-direction:column;gap:2px;min-width:0}
@@ -718,12 +730,13 @@ tr.det-row>td{padding:0;background:var(--bg);border-bottom:1px solid var(--line)
 .det-item>b{font-size:12.5px;font-weight:700;overflow:hidden;text-overflow:ellipsis}
 
 /* إخفاء بالأولوية */
-@media(max-width:1000px){ .pri-3{display:none!important} }
-@media(max-width:700px){
+.pri-3{display:none}                     /* تحليلي: في لوحة التفاصيل فقط — على كل العروض */
+@media screen and (min-width:701px){ .det-item.det-p2{display:none} } /* المرئي عمودًا لا يتكرر */
+@media screen and (max-width:700px){
   .pri-2{display:none!important}
   th.col-exp,td.col-exp{display:table-cell}
-  tr.row.open + tr.det-row{display:table-row}
-  .tw{max-height:none;overflow-x:hidden}          /* لا تمرير أفقي إطلاقًا */
+  .tw{max-height:none;overflow:visible;border:0}   /* الصفحة هي المُمرِّر → الرأس يلتصق بأعلى الشاشة */
+  th{top:0}
 
   /* تخطيط ثابت: الجدول يساوي عرض الحاوية تمامًا */
   table{table-layout:fixed;width:100%;min-width:0}
@@ -804,7 +817,7 @@ tr.det-row>td{padding:0;background:var(--bg);border-bottom:1px solid var(--line)
 .tbar{width:60px;height:5px;background:var(--line);border-radius:3px;overflow:hidden;flex-shrink:0}
 .tbar>i{display:block;height:100%;background:var(--brand);border-radius:3px}
 .tdead{color:var(--bad);font-weight:700}
-@media(max-width:680px){
+@media screen and (max-width:680px){
   .trow.l2{padding-right:26px}
   .trow.l3{padding-right:44px}
   .tmeta{gap:9px;font-size:10.5px}
@@ -828,7 +841,7 @@ tr.det-row>td{padding:0;background:var(--bg);border-bottom:1px solid var(--line)
    ═══════════════════════════════════════════════════════════════ */
 
 /* ── ≤1199: الشريط مضغوط تلقائيًا (لوحي) ── */
-@media(max-width:1199px){
+@media screen and (max-width:1199px){
   main{max-width:100%;padding:20px 18px 50px}
   header,.filters{padding-inline:18px}
   .k2{grid-template-columns:1fr}
@@ -837,7 +850,7 @@ tr.det-row>td{padding:0;background:var(--bg);border-bottom:1px solid var(--line)
 }
 
 /* ── ≤899: درج منزلق من اليمين ── */
-@media(max-width:899px){
+@media screen and (max-width:899px){
   .menu-btn{display:inline-flex}
   .sidebar{
     top:0; bottom:0; width:min(300px, 88vw); z-index:130;
@@ -882,10 +895,10 @@ tr.det-row>td{padding:0;background:var(--bg);border-bottom:1px solid var(--line)
   .dd-list{max-height:46vh}
   .dd-opt{padding:13px 14px;font-size:14px}
 }
-@media(min-width:900px){ .sb-back{display:none} }
+@media screen and (min-width:900px){ .sb-back{display:none} }
 
 /* ── ≤699: جوال ── */
-@media(max-width:699px){
+@media screen and (max-width:699px){
   header{padding:11px 14px;position:static}
   h1{font-size:15px} .sub{font-size:10px;line-height:1.35}
   .mark{width:30px;height:30px;font-size:13px;border-radius:8px}
@@ -909,7 +922,7 @@ tr.det-row>td{padding:0;background:var(--bg);border-bottom:1px solid var(--line)
 }
 
 /* ── ≤559: مؤشر واحد لكل صف (تخطيط أفقي مضغوط) ── */
-@media(max-width:559px){
+@media screen and (max-width:559px){
   .k5,.k3{grid-template-columns:1fr}
   .kpi{
     display:grid; grid-template-columns:1fr auto;
@@ -924,7 +937,7 @@ tr.det-row>td{padding:0;background:var(--bg);border-bottom:1px solid var(--line)
   .mgrid{grid-template-columns:1fr}
   .det-grid{grid-template-columns:1fr 1fr}
 }
-@media(max-width:380px){
+@media screen and (max-width:380px){
   main{padding:12px 10px 36px}
   .card{padding:11px 12px}
   .det-grid{grid-template-columns:1fr}
@@ -933,15 +946,15 @@ tr.det-row>td{padding:0;background:var(--bg);border-bottom:1px solid var(--line)
 
 
 /* ── تفضيلات المستخدم ── */
-@media(prefers-reduced-motion:reduce){
+@media screen and (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
   html{scroll-behavior:auto}
 }
-@media(prefers-contrast:more){
+@media screen and (prefers-contrast:more){
   .sb-item.on{outline:2px solid var(--brand);outline-offset:-2px}
   .card,.tw{border-width:2px}
 }
-@media(hover:none){
+@media screen and (hover:none){
   .sb-item{padding-block:13px}
   .dd-opt{padding:13px}
   tbody tr.row:hover{background:transparent}
@@ -949,6 +962,117 @@ tr.det-row>td{padding:0;background:var(--bg);border-bottom:1px solid var(--line)
   .kpi:hover{transform:none}
   .kpi:active{transform:scale(.985)}
   .exp-btn{width:30px;height:30px}
+}
+
+/* ── متعدد الاختيار ── */
+.dd-tools{display:flex;gap:6px;padding:6px 10px;border-bottom:1px solid var(--line)}
+.dd-tools button{font:inherit;font-size:11px;font-weight:700;color:var(--brand2);
+  background:var(--bg2);border:1px solid var(--line);border-radius:7px;padding:3.5px 9px;cursor:pointer}
+.dd-tools button:hover{background:var(--brand2);color:#fff}
+.dd-opt.mult{display:flex;align-items:center;gap:9px;width:100%;text-align:right;padding:7.5px 12px}
+.dd-opt.mult .lbl{flex:1;text-align:right;background:none;border:0;font:inherit;color:inherit;
+  cursor:pointer;padding:0;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dd-opt .ck{width:17px;height:17px;flex:0 0 17px;border:1.6px solid var(--line2);
+  border-radius:5px;cursor:pointer;position:relative;background:var(--bg)}
+.dd-opt.sel .ck{background:var(--brand2);border-color:var(--brand2)}
+.dd-opt.sel .ck::after{content:'✓';position:absolute;inset:0;display:grid;place-items:center;
+  color:#fff;font-size:11px;font-weight:900}
+.dd-opt.allrow{display:flex;justify-content:space-between;border-bottom:1px solid var(--line)}
+.dd-opt.allrow .lbl{background:none;border:0;font:inherit;color:inherit;cursor:pointer;padding:0}
+
+
+.kpi[role="button"]{cursor:pointer}
+.kpi.static{cursor:default}
+.kpi.static:hover{transform:none;box-shadow:none}
+.kpi.on-flt{outline:2px solid var(--brand2);outline-offset:-2px}
+
+/* ── ترقيم الصفحات ── */
+.tpager{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;
+  padding:9px 6px;font-size:12px;color:var(--muted)}
+.tpager button{font:inherit;font-weight:700;color:var(--brand2);background:var(--bg2);
+  border:1px solid var(--line);border-radius:8px;padding:5px 13px;cursor:pointer;min-height:34px}
+.tpager button:disabled{opacity:.4;cursor:default}
+.tpager button:not(:disabled):hover{background:var(--brand2);color:#fff}
+.tpager .pinfo{font-weight:700;color:var(--ink2)}
+/* ── فرز الأعمدة ── */
+th.sortable{cursor:pointer;user-select:none}
+th.sortable:hover{color:var(--brand2)}
+th .sarr{font-size:9px;opacity:.35;margin-inline-start:3px}
+th.sorted .sarr{opacity:1;color:var(--brand2)}
+/* ── خلية الاسم = فتح التفاصيل ── */
+td.prime .pn{cursor:pointer}
+td.prime .pn:hover{color:var(--brand2);text-decoration:underline;text-underline-offset:3px}
+/* ── لوحة التفاصيل ── */
+.det-grid{padding:12px 14px}
+.det-act{grid-column:1/-1;margin-top:4px}
+.det-act button{font:inherit;font-size:12px;font-weight:700;color:#fff;background:var(--brand2);
+  border:0;border-radius:8px;padding:7px 16px;cursor:pointer;min-height:36px}
+.det-act button:hover{filter:brightness(1.1)}
+/* ── معاينة منتجات المورد ── */
+.sup-prev{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.sup-prev .go-products{font:inherit;font-size:13px;font-weight:800;color:#fff;background:var(--brand);
+  border:0;border-radius:10px;padding:11px 22px;cursor:pointer;min-height:44px}
+.sup-prev .go-products:hover{filter:brightness(1.12)}
+
+/* ═══ المساعد الذكي ═══ */
+.ai-fab{position:fixed;bottom:20px;inset-inline-end:20px;z-index:140;
+  display:flex;align-items:center;gap:7px;border:0;cursor:pointer;
+  background:linear-gradient(135deg,var(--brand2),var(--brand));color:#fff;
+  font:inherit;font-weight:800;font-size:15px;padding:13px 17px;border-radius:999px;
+  box-shadow:0 8px 26px rgba(14,76,126,.35);min-height:48px}
+.ai-fab:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(14,76,126,.42)}
+.ai-fab .ai-fab-lbl{font-size:13px}
+.ai-panel{position:fixed;bottom:82px;inset-inline-end:20px;z-index:141;
+  width:min(392px,calc(100vw - 24px));height:min(560px,calc(100vh - 120px));
+  display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);
+  border-radius:16px;box-shadow:0 24px 60px rgba(15,27,45,.28);
+  opacity:0;transform:translateY(14px) scale(.98);pointer-events:none;
+  transition:opacity .22s ease,transform .22s ease}
+.ai-panel.on{opacity:1;transform:none;pointer-events:auto}
+.ai-head{display:flex;align-items:center;justify-content:space-between;gap:8px;
+  padding:12px 14px;border-bottom:1px solid var(--line)}
+.ai-head b{font-size:14px}
+.ai-badge{font-size:10px;font-weight:700;color:var(--muted);background:var(--bg2);
+  border:1px solid var(--line);border-radius:20px;padding:2px 9px;margin-inline-start:8px}
+.ai-badge.on{color:#fff;background:var(--ok);border-color:var(--ok)}
+.ai-badge.local{color:var(--warn);border-color:var(--warn)}
+.ai-hacts button{font:inherit;font-size:14px;background:var(--bg2);border:1px solid var(--line);
+  border-radius:8px;width:32px;height:32px;cursor:pointer;color:var(--ink2)}
+.ai-hacts button:hover{background:var(--brand2);color:#fff}
+.ai-priv{font-size:10px;color:var(--muted);padding:6px 14px;border-bottom:1px dashed var(--line)}
+.ai-msgs{flex:1;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:9px}
+.ai-msg{max-width:88%;padding:9px 12px;border-radius:13px;font-size:12.8px;line-height:1.75}
+.ai-msg.me{align-self:flex-start;background:var(--brand2);color:#fff;border-end-start-radius:4px}
+.ai-msg.bot{align-self:flex-end;background:var(--bg2);border:1px solid var(--line);
+  border-end-end-radius:4px}
+.ai-src{font-size:9.5px;font-weight:800;color:var(--muted);margin-bottom:3px}
+.ai-li{margin:2px 0}
+.ai-note{color:var(--muted);font-size:11px}
+.ai-dots{display:inline-flex;gap:4px;padding:3px 2px}
+.ai-dots i{width:6px;height:6px;border-radius:50%;background:var(--muted);
+  animation:aidot 1s infinite ease-in-out}
+.ai-dots i:nth-child(2){animation-delay:.15s}.ai-dots i:nth-child(3){animation-delay:.3s}
+@keyframes aidot{0%,80%,100%{opacity:.25;transform:translateY(0)}40%{opacity:1;transform:translateY(-3px)}}
+.ai-quick{display:flex;gap:6px;flex-wrap:wrap;padding:8px 12px;border-top:1px solid var(--line)}
+.ai-q{font:inherit;font-size:11px;font-weight:700;color:var(--brand2);background:var(--bg2);
+  border:1px solid var(--line);border-radius:20px;padding:5px 11px;cursor:pointer}
+.ai-q:hover{background:var(--brand2);color:#fff}
+.ai-inrow{display:flex;gap:8px;padding:10px 12px;border-top:1px solid var(--line)}
+.ai-inrow input{flex:1;font:inherit;font-size:13px;padding:10px 13px;border-radius:11px;
+  border:1.5px solid var(--line);background:var(--bg);color:var(--ink);min-height:42px}
+.ai-inrow input:focus{outline:none;border-color:var(--brand2)}
+.ai-inrow button{font:inherit;font-size:17px;font-weight:900;width:44px;border-radius:11px;
+  border:0;background:var(--brand);color:#fff;cursor:pointer}
+.ai-inrow button:disabled{opacity:.5}
+@media screen and (max-width:560px){
+  .ai-panel{inset:auto 0 0 0;width:100vw;height:min(86vh,640px);border-radius:16px 16px 0 0;
+    bottom:0;inset-inline-end:0}
+  .ai-fab .ai-fab-lbl{display:none}
+  .ai-fab{padding:14px 16px}
+}
+@media print{ .ai-fab,.ai-panel{display:none!important} }
+@media screen and (prefers-reduced-motion:reduce){
+  .ai-panel{transition:none}.ai-dots i{animation:none}
 }
 </style>
 </head>
@@ -967,7 +1091,7 @@ try{ if(innerWidth > 1280 && localStorage.getItem('sb.collapsed') === '1')
     <div class="brand">
       <div class="mark">ض</div>
       <div>
-        <h1>لوحة تحليل المخزون</h1>
+        <h1>لوحة تحليل المخزون <span class="ver" title="رقم إصدار الملف — تأكد من مطابقته عند أي مشكلة">v3.1</span></h1>
         <div class="sub">شركة الضبيبي التجارية · النصف الأول 2026 · الريال السعودي</div>
       </div>
     </div>
@@ -989,6 +1113,7 @@ try{ if(innerWidth > 1280 && localStorage.getItem('sb.collapsed') === '1')
   <div class="fwrap">
     <span class="flabel">تصفية</span>
     <div class="dd" id="dd-branch"></div>
+    <div class="dd" id="dd-wh"></div>
     <div class="dd" id="dd-sup"></div>
     <div class="dd" id="dd-c1"></div>
     <div class="dd" id="dd-c2"></div>
@@ -1177,7 +1302,7 @@ try{ if(innerWidth > 1280 && localStorage.getItem('sb.collapsed') === '1')
     <div class="grid k5" id="deadKpis"></div>
     <div class="card" style="margin-top:16px">
       <div class="ctitle">🚨 المنتجات الراكدة والبطيئة — مرتبة حسب القيمة</div>
-      <div class="csub">درجة الخطورة تجمع بين مدة الركود وقيمة رأس المال المعطّل · اضغط أي صف للتفصيل</div>
+      <div class="csub"><b>القاعدة الأساسية المعتمدة:</b> راكد = بلا بيع ٩٠ يومًا فأكثر · متقادم = ١٨٠ فأكثر (بعد قواعد الاستبعاد: السالب، النافد، الجديد، وسقف عمر المنتج) — والحالات حصرية لا تتقاطع. «البطيء» إنذار مبكر <b>دون الـ٩٠ حصرًا</b> بعتبات سعرية ٣٠/٤٥/٦٠/٧٥ يومًا · درجة الخطورة تجمع مدة الركود وقيمة رأس المال المعطّل</div>
       <div class="scroll-hint">← اسحب أفقيًا لعرض باقي الأعمدة</div>
       <div class="tw"><table id="tDead"></table></div>
     </div>
@@ -1269,12 +1394,55 @@ try{ if(innerWidth > 1280 && localStorage.getItem('sb.collapsed') === '1')
 
   <!-- الموردون -->
   <section class="page" id="p-supplier">
-    <div class="card">
-      <div class="ctitle">🤝 أداء الموردين</div>
-      <div class="csub">مرتبة حسب حجم الإنفاق · «مساهمة الراكد» تكشف الموردين الذين تسبب منتجاتهم في تعطيل رأس المال</div>
+    <div class="grid k5" id="supKpis"></div>
+
+    <div class="card" style="margin-top:14px">
+      <div class="ctitle">🤝 ترتيب أداء الموردين</div>
+      <div class="csub">كل الأرقام من التصفية الحالية · «المخاطرة» = 50% حصة الجامد + 30% حصة الطلب المتذبذب Z + 20% تركّز الفئات · انقر موردًا للحفر التفصيلي</div>
       <div class="scroll-hint">← اسحب أفقيًا لعرض باقي الأعمدة</div>
       <div class="tw" style="max-height:none"><table id="tSup"></table></div>
     </div>
+
+    <div id="supDetail" style="display:none">
+      <h2 class="rep-sec" id="supDetailTitle"></h2>
+      <div class="grid k5" id="supDKpis"></div>
+      <div class="grid k2" style="margin-top:14px">
+        <div class="card">
+          <div class="ctitle">📈 اتجاهه الشهري (إيراد)</div>
+          <div class="chart"><canvas id="cSupTrend"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="ctitle">🗂️ توزيع فئاته</div>
+          <div class="csub">انقر فئة لتصفية اللوحة كاملة بها</div>
+          <div class="tw"><table id="tSupCats"></table></div>
+        </div>
+      </div>
+      <div class="grid k2" style="margin-top:14px">
+        <div class="card">
+          <div class="ctitle">🏬 مبيعاته حسب الفرع</div>
+          <div class="tw"><table id="tSupBr"></table></div>
+        </div>
+        <div class="card">
+          <div class="ctitle">📦 مخزونه حسب المستودع</div>
+          <div class="tw"><table id="tSupWh"></table></div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <div class="ctitle">📦 منتجات المورّد</div>
+        <div id="supTopPrev"></div>
+      </div>
+      <div class="grid k2" style="margin-top:14px">
+        <div class="card">
+          <div class="ctitle">🚨 تنبيهات المورّد</div>
+          <div id="supAlerts"></div>
+        </div>
+        <div class="card">
+          <div class="ctitle">✅ توصيات الشراء والتحويل</div>
+          <div id="supRecs"></div>
+        </div>
+      </div>
+    </div>
+
     <div class="grid k2" style="margin-top:14px">
       <div class="card">
         <div class="ctitle">💸 أعلى 12 موردًا بالإنفاق</div>
@@ -1660,8 +1828,17 @@ function memo(key, fn){
   const v = fn(); cache.set(key, v); return v;
 }
 
-/* ===== حالة التصفية الهرمية ===== */
-const S = { branch:'', sup:'', c1:'', c2:'', c3:'', life:'', abc:'', q:'' };
+/* ===== حالة التصفية الهرمية =====
+   كل مفتاح يقبل قيمة واحدة أو عدة قيم مفصولة بـ | (متعدد الاختيار) */
+const S = { branch:'', wh:'', sup:'', c1:'', c2:'', c3:'', life:'', abc:'', q:'' };
+const setOf = v => v ? new Set(String(v).split('|')) : null;
+
+/* المستودع → الفروع المالكة له (من حقائق المخزون — مصدر الحقيقة) */
+const whBranches = new Map();
+D.stock.forEach(f => {
+  if(!whBranches.has(f[SF.W])) whBranches.set(f[SF.W], new Set());
+  whBranches.get(f[SF.W]).add(f[SF.B]);
+});
 
 /* فهرس عكسي: مورّد -> مجموعة أكواد منتجاته */
 const vendorProducts = new Map();
@@ -1670,14 +1847,17 @@ D.prodVendor.forEach(x => {
   vendorProducts.get(x.v).add(x.c);
 });
 
-/* هل المنتج يطابق تصفية الفئات؟ */
+/* هل المنتج يطابق تصفية الفئات والموردين؟ (كل مفتاح: مجموعة أو لا شيء) */
 function matchCat(p){
-  if(S.c1 && p[PC.C1] !== S.c1) return false;
-  if(S.c2 && p[PC.C2] !== S.c2) return false;
-  if(S.c3 && p[PC.C3] !== S.c3) return false;
-  if(S.sup){                                        // فلتر المورّد
-    const set = vendorProducts.get(S.sup);
-    if(!set || !set.has(p[PC.C])) return false;
+  const s1 = setOf(S.c1); if(s1 && !s1.has(p[PC.C1])) return false;
+  const s2 = setOf(S.c2); if(s2 && !s2.has(p[PC.C2])) return false;
+  const s3 = setOf(S.c3); if(s3 && !s3.has(p[PC.C3])) return false;
+  if(S.sup){                                        // فلتر المورّد (متعدد)
+    /* الاتساق المؤسسي: كل كود يُنسب لمورده الأساسي (vendorOf) في كل المسارات —
+       753 كودًا لها أكثر من مورد في أودو؛ اعتماد المجموعات كان يحتسبها لكل مورّديها
+       فيتجاوز الحفرُ الترتيبَ (اكتشفه التدقيق المؤسسي) */
+    const names = String(S.sup).split('|');
+    if(!names.includes(vendorOf.get(p[PC.C]))) return false;
   }
   return true;
 }
@@ -1693,27 +1873,52 @@ let VIEW = null;
 
 function compute(){
   cache.clear();                          // إبطال الذاكرة عند أي تغيير تصفية
-  const bIdx = S.branch ? BR.indexOf(S.branch) : -1;
-  const rows = [];      // منتجات بعد التصفية، بأرقام معاد حسابها للفرع المختار
+  /* مجموعات فهارس الفروع والمستودعات (متعدد الاختيار) */
+  let bSet = null;
+  if(S.branch){
+    bSet = new Set();
+    String(S.branch).split('|').forEach(n => { const i = BR.indexOf(n); if(i >= 0) bSet.add(i); });
+  }
+  let wSet = null;
+  if(S.wh){
+    wSet = new Set();
+    String(S.wh).split('|').forEach(n => { const i = WH.indexOf(n); if(i >= 0) wSet.add(i); });
+    /* المبيعات لا تحمل بُعد المستودع — تُقصر على الفروع المالكة للمستودعات المختارة */
+    if(!bSet){
+      bSet = new Set();
+      wSet.forEach(w => (whBranches.get(w) || []).forEach(b => bSet.add(b)));
+    }
+  }
+  const fastPath = !bSet && !wSet;
+  const rows = [];      // منتجات بعد التصفية، بأرقام معاد حسابها للنطاق المختار
 
   D.products.forEach(p => {
     if(!matchCat(p)) return;
 
     let q=0, v=0, sq=0, rev=0, cg=0, gp=0, ds=p[PC.DS];
 
-    if(bIdx < 0){
-      // كل الفروع -> استخدم الإجماليات الجاهزة
+    if(fastPath){
+      // كل الفروع والمستودعات -> الإجماليات الجاهزة
       q=p[PC.Q]; v=p[PC.V]; sq=p[PC.SQ]; rev=p[PC.REV]; cg=p[PC.CG]; gp=p[PC.GP];
     } else {
-      // فرع محدد -> اجمع من الحقائق
+      // نطاق محدد -> اجمع من الحقائق
       const sfs = stockByCode.get(p[PC.C]);
-      if(sfs) sfs.forEach(f => { if(f[SF.B]===bIdx){ q+=f[SF.Q]; v+=f[SF.V]; } });
+      if(sfs) sfs.forEach(f => {
+        if(bSet && !bSet.has(f[SF.B])) return;
+        if(wSet && !wSet.has(f[SF.W])) return;
+        q+=f[SF.Q]; v+=f[SF.V];
+      });
       const xfs = salesByCode.get(p[PC.C]);
-      if(xfs) xfs.forEach(f => { if(f[XF.B]===bIdx){
+      if(xfs) xfs.forEach(f => { if(!bSet || bSet.has(f[XF.B])){
         sq+=f[XF.Q]; rev+=f[XF.REV]; cg+=f[XF.CG]; gp+=f[XF.GP]; } });
-      if(q===0 && sq===0) return;   // لا وجود له في هذا الفرع
-      const l = lastSaleIdx.get(p[PC.C] + '|' + bIdx);
-      ds = (l === undefined) ? 9999 : l;
+      if(q===0 && sq===0) return;   // لا وجود له في هذا النطاق
+      // أيام بلا بيع = الأحدث (الأدنى) عبر الفروع المختارة
+      let best;
+      (bSet || new Set()).forEach(b => {
+        const l = lastSaleIdx.get(p[PC.C] + '|' + b);
+        if(l !== undefined && (best === undefined || l < best)) best = l;
+      });
+      ds = (best === undefined) ? 9999 : best;
     }
 
     const o = {
@@ -1726,9 +1931,9 @@ function compute(){
       to: v>0 ? +(cg/v).toFixed(2) : 0,
       cov: sq>0 ? Math.round(q/(sq/D.rules.period_days)) : 9999,
     };
-    // بلا تصفية فرع -> استخدم تصنيف بايثون الجاهز (المرجع الموثوق)
-    // مع تصفية فرع -> أعد الحساب من أرقام الفرع
-    o.lc = (bIdx < 0) ? LC[p[PC.LC]] : lifecycleOf(o);
+    // بلا تصفية نطاق -> تصنيف بايثون الجاهز (المرجع الموثوق)
+    // مع تصفية -> أعد الحساب من أرقام النطاق
+    o.lc = fastPath ? LC[p[PC.LC]] : lifecycleOf(o);
     if(!matchLife(o.lc)) return;
     if(S.q){ const qq=S.q.toLowerCase(); if(!String(o.n).toLowerCase().includes(qq) && !String(o.c).includes(qq)) return; }
     rows.push(o);
@@ -1739,10 +1944,13 @@ function compute(){
   computeABC(rows, 'gp',  'abcGP');
   computeABC(rows, 'v',   'abcVal');
 
-  // تطبيق فلتر ABC بعد الحساب
-  const final = S.abc ? rows.filter(x => x.abc === S.abc) : rows;
+  // تطبيق فلتر ABC بعد الحساب (متعدد)
+  const aSet = setOf(S.abc);
+  const final = aSet ? rows.filter(x => aSet.has(x.abc)) : rows;
 
-  VIEW = { rows: final, all: rows, branchIdx: bIdx };
+  VIEW = { rows: final, all: rows,
+           branchIdx: (bSet && bSet.size === 1) ? [...bSet][0] : -1,
+           branchSet: bSet, whSet: wSet };
   return VIEW;
 }
 
@@ -1783,29 +1991,33 @@ function computeABC(rows, key, out){
 
 /* ===== الفئات المتاحة ضمن التصفية الحالية (تصفية متتالية) ===== */
 function availableCats(level){
-  const bIdx = S.branch ? BR.indexOf(S.branch) : -1;
+  let bSet = null;
+  if(S.branch){ bSet = new Set();
+    String(S.branch).split('|').forEach(n=>{ const i=BR.indexOf(n); if(i>=0) bSet.add(i); }); }
+  let wSet = null;
+  if(S.wh){ wSet = new Set();
+    String(S.wh).split('|').forEach(n=>{ const i=WH.indexOf(n); if(i>=0) wSet.add(i); }); }
+  const s1 = setOf(S.c1), s2 = setOf(S.c2);
+  const supNames = S.sup ? String(S.sup).split('|') : null;
   const present = new Set();
 
   D.products.forEach(p => {
-    // فلتر الفرع: هل المنتج موجود فيه؟
-    if(bIdx >= 0){
+    if(bSet || wSet){
       const sfs = stockByCode.get(p[PC.C]);
       const xfs = salesByCode.get(p[PC.C]);
-      const inB = (sfs && sfs.some(f=>f[SF.B]===bIdx)) || (xfs && xfs.some(f=>f[XF.B]===bIdx));
-      if(!inB) return;
+      const inScope = (sfs && sfs.some(f => (!bSet || bSet.has(f[SF.B])) && (!wSet || wSet.has(f[SF.W]))))
+                   || (xfs && bSet && xfs.some(f => bSet.has(f[XF.B])));
+      if(!inScope) return;
     }
-    if(S.sup){                                       // احترام فلتر المورّد
-      const set = vendorProducts.get(S.sup);
-      if(!set || !set.has(p[PC.C])) return;
-    }
+    if(supNames && !supNames.includes(vendorOf.get(p[PC.C]))) return;
     if(level===1){ present.add(p[PC.C1]); }
     else if(level===2){
-      if(S.c1 && p[PC.C1]!==S.c1) return;
+      if(s1 && !s1.has(p[PC.C1])) return;
       if(p[PC.C2]) present.add(p[PC.C2]);
     }
     else if(level===3){
-      if(S.c1 && p[PC.C1]!==S.c1) return;
-      if(S.c2 && p[PC.C2]!==S.c2) return;
+      if(s1 && !s1.has(p[PC.C1])) return;
+      if(s2 && !s2.has(p[PC.C2])) return;
       if(p[PC.C3]) present.add(p[PC.C3]);
     }
   });
@@ -1832,7 +2044,7 @@ function kpis(){
   // مع تصفية: نُقدّره بنسبة قيمة العرض إلى الإجمالي
   const totalInv = D.audit.stock_raw;
   const scale = totalInv!==0 ? invVal/totalInv : 0;
-  const avgInv = (VIEW.branchIdx<0 && !S.c1 && !S.life && !S.abc && !S.q)
+  const avgInv = (!S.branch && !S.wh && !S.sup && !S.c1 && !S.c2 && !S.c3 && !S.life && !S.abc && !S.q)
       ? D.audit.avg_inv
       : D.audit.avg_inv * scale;
   const turn = avgInv>0 ? cogs/avgInv : 0;
@@ -1940,22 +2152,88 @@ function warehouseStats(){
 
 /* الموردون ضمن التصفية */
 function supplierStats(){
-  const codes = new Set(VIEW.rows.map(x=>x.c));
+  /* تقرير مورّدين تنفيذي: كل مقياس من العرض المصفّى الحالي + بيانات الشراء المصدرية */
   const m = new Map();
+  const totRev = VIEW.rows.reduce((s,x)=>s+Math.max(0,x.rev),0) || 1;
   VIEW.rows.forEach(x => {
     const v = vendorOf.get(x.c); if(!v) return;
-    if(!m.has(v)) m.set(v, {n:v, skus:0, v:0, rev:0, deadV:0});
+    if(!m.has(v)) m.set(v, {n:v, skus:0, v:0, posV:0, activeV:0, rev:0, gp:0, cg:0,
+      deadV:0, slowV:0, negN:0, zN:0, xyzN:0, abc:{A:0,B:0,C:0}, cats:new Set(), lastDs:9999});
     const g = m.get(v);
-    g.skus++; g.v += x.v; g.rev += x.rev;
+    g.skus++; g.v += x.v; g.rev += x.rev; g.gp += x.gp; g.cg += x.cg;
+    if(x.v > 0) g.posV += x.v;
+    if(x.lc==='نشط'||x.lc==='جديد') g.activeV += Math.max(0,x.v);
     if(x.lc==='راكد'||x.lc==='متقادم') g.deadV += x.v;
+    if(x.lc==='بطيء') g.slowV += x.v;
+    if(x.q < 0) g.negN++;
+    if(x.xyz !== '—'){ g.xyzN++; if(x.xyz==='Z') g.zN++; }
+    g.abc[x.abc] = (g.abc[x.abc]||0) + 1;
+    g.cats.add(x.c1);
+    if(x.ds < g.lastDs) g.lastDs = x.ds;
   });
-  const base = new Map(D.suppliers.map(s=>[s.n, s]));
+  const base = new Map(D.suppliers.map(s2=>[s2.n, s2]));
+  const totalInv = D.audit.stock_raw || 1;
   return [...m.values()].map(g=>{
     const b = base.get(g.n) || {};
-    return {...g, spend: b.spend||0, orders: b.orders||0, lead: b.lead||0};
-  }).sort((a,b)=>(b.spend||0)-(a.spend||0)).slice(0,30);
+    const deadPct = g.posV>0 ? g.deadV/g.posV*100 : 0;
+    const zShare  = g.xyzN>0 ? g.zN/g.xyzN*100 : 0;
+    const catConc = g.skus>0 ? (g.cats.size===1 ? 100 : Math.max(0, 100 - g.cats.size*12)) : 0;
+    const health  = g.posV>0 ? Math.max(0, Math.min(100, g.activeV/g.posV*100)) : 0;
+    const turn    = g.posV>0 ? g.cg/(D.audit.avg_inv * (g.posV/totalInv)) : 0;
+    return {...g, cats:[...g.cats],
+      spend: b.spend||0, orders: b.orders||0, lead: b.lead||0,
+      freq: b.orders ? +(b.orders/6).toFixed(1) : 0,          // أوامر/شهر خلال الفترة
+      margin: g.rev>0 ? g.gp/g.rev*100 : 0,
+      deadPct, zShare, health, turn,
+      dep: g.rev>0 ? g.rev/totRev*100 : 0,                    // الاعتماد = حصته من الإيراد
+      /* مخاطرة شفافة: 50% حصة الجامد + 30% حصة Z + 20% تركّز فئة واحدة */
+      risk: Math.min(100, deadPct*0.5 + zShare*0.3 + catConc*0.2)};
+  }).sort((a,b)=>(b.spend||b.rev)-(a.spend||a.rev));
 }
 
+/* تفصيل مورّد واحد (حفر) — توزيعاته واتجاهه وتنبيهاته */
+function supplierDetail(name){
+  return memo('supD:'+name, ()=>{
+    const rows = VIEW.rows.filter(x => vendorOf.get(x.c) === name);
+    const byC = new Map(), byB = new Map(), byW = new Map(), byM = [0,0,0,0,0,0];
+    rows.forEach(x=>{
+      const c = byC.get(x.c1)||{n:0,v:0,rev:0,deadV:0}; c.n++; c.v+=x.v; c.rev+=x.rev;
+      if(x.lc==='راكد'||x.lc==='متقادم') c.deadV+=x.v; byC.set(x.c1,c);
+    });
+    rows.forEach(x=>{
+      const sfs = stockByCode.get(x.c)||[];
+      sfs.forEach(f=>{
+        if(VIEW.whSet && !VIEW.whSet.has(f[SF.W])) return;
+        if(VIEW.branchSet && !VIEW.branchSet.has(f[SF.B])) return;
+        const w = byW.get(WH[f[SF.W]])||{v:0,q:0}; w.v+=f[SF.V]; w.q+=f[SF.Q]; byW.set(WH[f[SF.W]],w);
+      });
+      const xfs = salesByCode.get(x.c)||[];
+      xfs.forEach(f=>{
+        if(VIEW.branchSet && !VIEW.branchSet.has(f[XF.B])) return;
+        const b = byB.get(BR[f[XF.B]])||{rev:0,gp:0,q:0}; b.rev+=f[XF.REV]; b.gp+=f[XF.GP]; b.q+=f[XF.Q];
+        byB.set(BR[f[XF.B]],b);
+        byM[f[XF.M]] += f[XF.REV];
+      });
+    });
+    const st = supplierStats().find(s2=>s2.n===name) || {};
+    const alerts = [];
+    if(st.deadPct > 30) alerts.push({t:'bad', m:`${Math.round(st.deadPct)}% من مخزونه جامد — أوقف التوريد الجديد حتى التصريف`});
+    if(st.zShare > 50) alerts.push({t:'warn', m:`${Math.round(st.zShare)}% من أصنافه طلبها متذبذب (Z) — قلّل دفعات الشراء`});
+    if(st.lead > 10) alerts.push({t:'warn', m:`مهلة تسليم طويلة (${Math.round(st.lead)} يومًا) — يلزم مخزون أمان أعلى`});
+    if(st.dep > 15) alerts.push({t:'warn', m:`اعتماد مرتفع (${st.dep.toFixed(1)}% من الإيراد) — خطر تركّز؛ نوّع المصادر`});
+    if(st.negN > 0) alerts.push({t:'bad', m:`${st.negN} من أصنافه برصيد سالب — جرد قبل أي طلب شراء`});
+    if(!alerts.length) alerts.push({t:'ok', m:'لا تنبيهات حرجة على هذا المورّد ضمن التصفية الحالية'});
+    const recs = [];
+    if(st.deadV > 0) recs.push(`تصفية/إرجاع بضاعة جامدة بقيمة ${Math.round(st.deadV).toLocaleString('en')} ر.س قبل الطلب التالي`);
+    if((st.abc||{}).A > 0) recs.push(`${st.abc.A} صنف فئة A — أمّن توفرها الدائم وتفاوض على أولوية التوريد`);
+    if(st.turn > 0 && st.turn < 1) recs.push('دوران أقل من 1 — راجع كميات إعادة الطلب نزولًا');
+    return {
+      cats: [...byC.entries()].map(([k2,v2])=>({name:k2,...v2})).sort((a,b)=>b.rev-a.rev),
+      branches: [...byB.entries()].map(([k2,v2])=>({name:k2,...v2})).sort((a,b)=>b.rev-a.rev),
+      whs: [...byW.entries()].map(([k2,v2])=>({name:k2,...v2})).sort((a,b)=>b.v-a.v),
+      trend: byM, top: rows.sort((a,b)=>b.rev-a.rev).slice(0,12), st, alerts, recs};
+  });
+}
 
 /* ═══════════════════════════════════════════════════════════════
    طبقة الحفظ المؤقت (Memoization)
@@ -1974,7 +2252,7 @@ warehouseStats = () => memo('ws', _warehouseStats);
 supplierStats  = () => memo('ss', _supplierStats);
 monthly        = () => memo('mo', _monthly);
 groupBy        = key => memo('gb:' + key, () => _groupBy(key));
-availableCats  = lvl => memo('ac:' + lvl + '|' + S.branch + '|' + S.sup + '|' + S.c1 + '|' + S.c2,
+availableCats  = lvl => memo('ac:' + lvl + '|' + S.branch + '|' + S.wh + '|' + S.sup + '|' + S.c1 + '|' + S.c2,
                              () => _availableCats(lvl));
 
 
@@ -2048,8 +2326,9 @@ function transfers(){
       });
     });
     /* عند تصفية فرع: نعرض الفرص التي تخصّه فقط (مصدرًا أو وجهة) */
-    const filtered = S.branch
-      ? out.filter(x => x.from === S.branch || x.to === S.branch)
+    const bset = setOf(S.branch);
+    const filtered = bset
+      ? out.filter(x => bset.has(x.from) || bset.has(x.to))
       : out;
     return filtered.sort((a, b) => b.value - a.value);
   });
@@ -2117,7 +2396,8 @@ function replenish(){
       });
     });
     // عند تصفية فرع: بنود ذلك الفرع فقط
-    const filtered = S.branch ? out.filter(x => x.branch === S.branch) : out;
+    const bset2 = setOf(S.branch);
+    const filtered = bset2 ? out.filter(x => bset2.has(x.branch)) : out;
     // ترتيب: المبيعات المهدّدة أولًا (الأثر المالي)، ثم التغطية
     return filtered.sort((a, b) => b.atRisk - a.atRisk || a.cover - b.cover);
   });
@@ -2249,7 +2529,8 @@ function drawBranchReport(){
     {l:'توزيع ABC', v:`<span class="amt"><span class="num">${abcN.A}</span>/<span class="num">${abcN.B}</span>/<span class="num">${abcN.C}</span></span>`, f:'A / B / C', c:'brand'},
     {l:'فرص التحويل', v:unit(F.format(tr.length),'فرصة'), f:`${k(tr.reduce((s,x)=>s+x.value,0))} ر.س`, c:'ok'},
   ];
-  setHTML('brKpis', kp.map(c=>`<div class="card kpi ${c.c}"><div class="klabel">${c.l}</div>
+  setHTML('brKpis', kp.map(c=>`<div class="card kpi ${c.c}" role="button" tabindex="0"
+    onclick="go('exec')" title="يفتح الملخص التنفيذي بفلتر هذا الفرع"><div class="klabel">${c.l}</div>
     <div class="kval">${c.v}</div><div class="kfoot">${c.f}</div></div>`).join(''));
 
   /* ═══ ٣) التحليل المالي ═══ */
@@ -2463,41 +2744,76 @@ function renderGrouped(id, rows, keyFn, cols, onRow){
   const pr = PRIO[id] || [];
   cols.forEach((c,i)=>{ if(!c.p) c.p = pr[i] || 1; });
   const hidden = cols.filter(c=>c.p>1), exp = hidden.length>0;
-  const span = cols.length + (exp?1:0);
+  const spanAll = cols.length + (exp?1:0);
   if(!rows.length){
-    t.innerHTML = `<tbody><tr><td class="empty" colspan="${span}">لا توجد بيانات</td></tr></tbody>`;
+    t.innerHTML = `<tbody><tr><td class="empty" colspan="${spanAll}">لا توجد بيانات</td></tr></tbody>`;
     return;
   }
+  /* التصدير الكامل — كل الصفوف مع اسم مجموعتها */
+  t._exportFull = () => ({
+    head: ['المجموعة', ...cols.map(c=>c.h.replace(/<[^>]+>/g,''))],
+    rows: rows.map(r2 => { const d=document.createElement('div');
+      return [keyFn(r2)||'—', ...cols.map(c=>{ d.innerHTML=c.f(r2);
+        return d.textContent.replace(/\s+/g,' ').trim(); })]; }),
+  });
   const groups = new Map();
-  rows.forEach(r => { const g = keyFn(r) || '—';
-    if(!groups.has(g)) groups.set(g, []); groups.get(g).push(r); });
+  rows.forEach(r2 => { const g = keyFn(r2) || '—';
+    if(!groups.has(g)) groups.set(g, []); groups.get(g).push(r2); });
   const sorted = [...groups.entries()]
     .sort((a,b)=> b[1].reduce((s,x)=>s+x.v,0) - a[1].reduce((s,x)=>s+x.v,0));
 
   let html = `<thead><tr>${exp?'<th class="col-exp"></th>':''}` +
     cols.map(c=>`<th class="pri-${c.p}${c.num?' t-num':''}">${c.h}</th>`).join('') + '</tr></thead><tbody>';
   let idx = 0; const flat = [];
+  const primeI = cols.findIndex(c => c.p===1 && !c.num);
   sorted.forEach(([g, items]) => {
     const tot = items.reduce((s,x)=>s+x.v,0);
-    html += `<tr class="grp-row"><td colspan="${span}">${esc(g)}
+    html += `<tr class="grp-row"><td colspan="${spanAll}">${esc(g)}
       <span class="grp-tot">— ${F.format(items.length)} منتج · ${F.format(tot)} ر.س</span></td></tr>`;
-    items.forEach(r => {
-      flat.push(r);
-      const tds = cols.map(c=>`<td class="pri-${c.p}${c.num?' t-num':''}">${c.f(r)}</td>`).join('');
+    items.forEach(r2 => {
+      flat.push(r2);
+      const tds = cols.map((c,ci)=>`<td class="pri-${c.p}${c.num?' t-num':''}${ci===primeI&&exp?' prime':''}">`+
+        (ci===primeI&&exp?`<span class="pn" role="button" tabindex="0" title="عرض التفاصيل">${c.f(r2)}</span>`:c.f(r2))+`</td>`).join('');
       const btn = exp ? `<td class="col-exp"><button class="exp-btn" type="button" aria-expanded="false"
         aria-label="تفاصيل">${CHEV}</button></td>` : '';
-      const det = exp ? `<tr class="det-row"><td colspan="${span}"><div class="det-grid">` +
-        hidden.map(c=>`<div class="det-item"><span>${c.h}</span><b>${c.f(r)}</b></div>`).join('') +
-        '</div></td></tr>' : '';
+      const det = exp ? `<tr class="det-row"><td colspan="${spanAll}"><div class="dwrap"><div><div class="det-grid">` +
+        hidden.map(c=>`<div class="det-item${c.p===2?' det-p2':''}"><span>${c.h}</span><b>${c.f(r2)}</b></div>`).join('') +
+        (onRow?`<div class="det-act"><button type="button">فتح التفاصيل الكاملة ↗</button></div>`:'') +
+        '</div></div></div></td></tr>' : '';
       html += `<tr class="row" data-i="${idx++}">${btn}${tds}</tr>${det}`;
     });
   });
   t.innerHTML = html + '</tbody>';
+
+  /* colspan = المرئي فعلًا — لصفوف المجموعات وصفوف التفاصيل معًا (إصلاح الأعمدة الشبحية) */
+  const applySpan = () => {
+    const r0 = t.querySelector('tbody tr.row');
+    const kids = (r0 && r0.children) ? Array.from(r0.children) : [];
+    if(!kids.length) return;
+    const v = Math.max(1, kids.filter(c=>c && c.offsetParent).length || kids.length);
+    t.querySelectorAll('tr.grp-row > td, tr.det-row > td').forEach(td => td.colSpan = v);
+  };
+  applySpan();
+  t._applySpan = applySpan;                 // يعاد عند تغيير العرض (المستمع العام أدناه)
+
   t.querySelectorAll('tbody tr.row').forEach(tr => {
+    const toggle = () => {
+      const was = tr.classList.contains('open');
+      t.querySelectorAll('tr.row.open').forEach(o => { if(o!==tr){ o.classList.remove('open');
+        o.querySelector('.exp-btn')?.setAttribute('aria-expanded','false'); } });
+      tr.classList.toggle('open', !was);
+      tr.querySelector('.exp-btn')?.setAttribute('aria-expanded', String(!was));
+    };
     const btn = tr.querySelector('.exp-btn');
-    if(btn) btn.onclick = e => { e.stopPropagation();
-      const on = tr.classList.toggle('open'); btn.setAttribute('aria-expanded', String(on)); };
-    if(onRow) tr.onclick = () => onRow(flat[+tr.dataset.i]);
+    if(btn) btn.onclick = e => { e.stopPropagation(); toggle(); };
+    const pn = tr.querySelector('td.prime .pn');
+    if(pn){ pn.onclick = e => { e.stopPropagation(); toggle(); };
+      pn.onkeydown = e => { if(e.key==='Enter'||e.key===' '){ e.preventDefault(); e.stopPropagation(); toggle(); } }; }
+    const act = tr.nextElementSibling?.querySelector?.('.det-act button');
+    if(act && onRow) act.onclick = e => { e.stopPropagation(); onRow(flat[+tr.dataset.i]); };
+    if(onRow){ tr.onclick = () => onRow(flat[+tr.dataset.i]); }
+    else { tr.onclick = toggle; }
+    tr.tabIndex = 0;
   });
 }
 
@@ -2514,10 +2830,13 @@ const PAGE_TITLE = {
 
 /* وصف الفلاتر المطبّقة */
 function activeFilters(){
-  const map = {branch:'الفرع', c1:'الفئة', c2:'فئة فرعية', c3:'فئة دقيقة',
-               life:'الحالة', abc:'فئة ABC', q:'بحث'};
+  const map = {branch:'الفرع', wh:'المستودع', sup:'المورّد', c1:'الفئة', c2:'فئة فرعية',
+               c3:'فئة دقيقة', life:'الحالة', abc:'فئة ABC', q:'بحث'};
   return Object.entries(S).filter(([,v])=>v)
-    .map(([k2,v])=>`${map[k2]}: ${leafName(v)}`);
+    .map(([k2,v])=>{
+      const vals = String(v).split('|').map(leafName);
+      return `${map[k2]}: ${vals.length<=2 ? vals.join(' أو ') : vals.length + ' قيم'}`;
+    });
 }
 
 /* بناء رأس وتذييل الطباعة حسب السياق */
@@ -2537,7 +2856,7 @@ function buildPrintChrome(){
         <td style="border:0;text-align:left;padding:0;font-size:9.5px;color:#555;line-height:1.6">
           الفترة: النصف الأول 2026 (١ يناير – ٣٠ يونيو)<br>
           صدر في: ${now.toLocaleDateString('en-GB')} ${now.toTimeString().slice(0,5)}<br>
-          لوحة تحليل المخزون · إصدار 2.0
+          لوحة تحليل المخزون · إصدار 3.1 — بناء 2026-07-12
         </td>
       </tr>
       ${f.length ? `<tr><td colspan="2" style="border:0;padding:4px 0 0;font-size:9.5px;color:#0E4C7E">
@@ -2624,7 +2943,7 @@ function aoaToXlsx(aoa, sheetName, boldRows){
   const sheet = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView rightToLeft="1" workbookViewId="0"/></sheetViews><cols>${cols}</cols><sheetData>${rowsXml}</sheetData></worksheet>`;
   const styles = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="2"><font><sz val="10"/><name val="Arial"/></font><font><b/><sz val="10"/><color rgb="FFFFFFFF"/><name val="Arial"/></font></fonts><fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FF0E4C7E"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf/></cellStyleXfs><cellXfs count="2"><xf xfId="0"/><xf fontId="1" fillId="2" applyFont="1" applyFill="1" xfId="0"/></cellXfs></styleSheet>`;
+<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="2"><font><sz val="10"/><name val="Arial"/></font><font><b/><sz val="10"/><color rgb="FFFFFFFF"/><name val="Arial"/></font></fonts><fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FF0E4C7E"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="2"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="2" borderId="0" applyFont="1" applyFill="1" xfId="0"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles><dxfs count="0"/><tableStyles count="0" defaultTableStyle="TableStyleMedium2" defaultPivotStyle="PivotStyleLight16"/></styleSheet>`;
   const wbXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><sheets><sheet name="${xesc(sheetName.slice(0,31))}" sheetId="1" r:id="rId1"/></sheets></workbook>`;
   const files = [
@@ -2661,7 +2980,13 @@ function dl(name, content, type){
 }
 const csvEsc = v => `"${String(v).replace(/"/g,'""')}"`;
 const stamp = () => new Date().toISOString().slice(0,10);
-const ctxName = () => (S.branch ? '_' + S.branch.replace(/[^\u0600-\u06FF\w]+/g,'_') : '');
+const ctxName = () => {
+  const parts=[];
+  if(S.branch){ const a=String(S.branch).split("|"); parts.push(a.length>1? a.length+"فروع" : a[0]); }
+  if(S.wh){ const a=String(S.wh).split("|"); parts.push(a.length>1? a.length+"مستودعات" : a[0]); }
+  if(S.sup){ const a=String(S.sup).split("|"); parts.push(a.length>1? a.length+"موردين" : a[0]); }
+  return parts.length? "_"+parts.join("_").replace(/[^\u0600-\u06FF\w]+/g,"_") : "";
+};
 
 /* تصدير العرض الحالي (يحترم كل الفلاتر) */
 function exportView(fmt){
@@ -2829,6 +3154,23 @@ function preparePrint(id){
   clone.querySelectorAll('.rep-acts,.no-print,.scroll-hint,.exp-btn,.chip-clear,.x,button')
        .forEach(n=>n.remove());
   clone.querySelectorAll('.tw').forEach(tw=>{tw.style.maxHeight='none';tw.style.overflow='visible';});
+  clone.querySelectorAll('.tpager,.sarr,.det-row').forEach(n=>n.remove());
+
+  /* الجداول المرقّمة: الورقة تطبع كامل المجموعة المصفّاة لا صفحة الشاشة */
+  const liveTb = [...el.querySelectorAll('table')];
+  [...clone.querySelectorAll('table')].forEach((ct,i)=>{
+    const src = liveTb[i];
+    if(!src || !src._exportFull) return;
+    const d = src._exportFull();
+    if(d.rows.length <= ct.querySelectorAll('tbody tr.row').length) return;
+    const bd = ct.querySelector('tbody'); if(!bd) return;
+    bd.innerHTML = d.rows.map(rw =>
+      '<tr class="row">' + rw.map((c2,j)=>
+        `<td class="pri-1">${String(c2).replace(/&/g,'&amp;').replace(/</g,'&lt;')}</td>`).join('') + '</tr>').join('');
+    /* رأس النسخة: كل الأعمدة المنطقية بلا عمود التوسيع */
+    const hd = ct.querySelector('thead tr');
+    if(hd) hd.innerHTML = d.head.map(h2=>`<th class="pri-1">${h2}</th>`).join('');
+  });
 
   /* عنوان الكتلة يُطبع في ترويسة الطباعة — نزيل نسخته داخل الكتلة
      (النص نفسه مرتين كان يتراكب في بعض البيئات ويبدو مشوّهًا) */
@@ -2844,8 +3186,9 @@ function preparePrint(id){
   /* A4 تلقائي: أفقي للجداول عريضة الأعمدة */
   let orient = 'portrait';
   [...el.querySelectorAll('table')].forEach(tb=>{
-    const ths = [...tb.querySelectorAll('thead th')]
-      .filter(th=>getComputedStyle(th).display!=='none').length;
+    /* الورقة تُظهر كل الأعمدة (pri-2/3 تُكشف طباعةً أو تُدمج نصيًا) → العدّ منطقي لا مرئي */
+    const ths = tb._exportFull ? tb._exportFull().head.length
+      : tb.querySelectorAll('thead th:not(.col-exp)').length;
     if(ths >= 8) orient = 'landscape';
   });
   let os = document.getElementById('orientStyle');
@@ -2897,6 +3240,13 @@ function xlsScopeData(id){
   let nRows = 0; const bold = new Set();
   el.querySelectorAll('table').forEach((tb,ti)=>{
     if(ti > 0) out.push([]);
+    if(tb._exportFull){
+      /* جدول مُرقَّم/مفروز: التصدير = كامل المجموعة المصفّاة لا الصفحة المعروضة */
+      const d = tb._exportFull();
+      bold.add(out.length); out.push(d.head);
+      d.rows.forEach(rw => { out.push(rw); nRows++; });
+      return;
+    }
     [...tb.querySelectorAll('tr')]
       .filter(tr => getComputedStyle(tr).display !== 'none' && !tr.classList.contains('det-row'))
       .forEach(tr => {
@@ -2946,8 +3296,12 @@ let TH='light';
 const cv = x => getComputedStyle(document.body).getPropertyValue(x).trim();
 const charts = {};
 
-/* ===== القوائم المنسدلة ===== */
+/* ===== القوائم المنسدلة — متعددة الاختيار =====
+   الدلالة: قيمة المفتاح في S نص واحد أو قائمة مفصولة بـ | (يفهمها المحرك).
+   نقر التسمية = اختيار حصري وإغلاق (سريع) · نقر مربع الاختيار = تبديل مع بقاء القائمة */
 const DD = {};
+const DD_RECENT = {};                      // آخر المستخدَم (جلسة فقط)
+const valsOf = key => S[key] ? String(S[key]).split('|') : [];
 function buildDD(id, key, placeholder, opts, disabled){
   const el = document.getElementById(id);
   if(!el) return;
@@ -2957,8 +3311,13 @@ function buildDD(id, key, placeholder, opts, disabled){
     <button class="dd-btn" type="button" aria-haspopup="listbox" aria-expanded="false">
       <span class="cur">${placeholder}</span><span class="arw">▼</span>
     </button>
-    <div class="dd-menu" role="listbox">
+    <div class="dd-menu" role="listbox" aria-multiselectable="true">
       ${opts.length>8?'<div class="dd-search"><input type="text" placeholder="ابحث..." aria-label="بحث"></div>':''}
+      <div class="dd-tools">
+        <button type="button" data-t="all">تحديد الكل</button>
+        <button type="button" data-t="none">مسح</button>
+        <button type="button" data-t="inv">عكس</button>
+      </div>
       <div class="dd-list"></div>
     </div>`;
   const btn = el.querySelector('.dd-btn');
@@ -2971,28 +3330,72 @@ function buildDD(id, key, placeholder, opts, disabled){
       if(srch){ srch.value=''; DD[id].filter=''; paintDD(id); if(!isMobile()) srch.focus(); } } };
   if(srch){ srch.oninput = () => { DD[id].filter = srch.value.trim().toLowerCase(); paintDD(id); };
             srch.onclick = e => e.stopPropagation(); }
+  el.querySelectorAll('.dd-tools button').forEach(b=>{
+    b.onclick = e => { e.stopPropagation();
+      const {opts:os, filter} = DD[id];
+      const visible = (filter ? os.filter(o=>String(o.label).toLowerCase().includes(filter)) : os)
+        .map(o=>o.value);
+      const cur = new Set(valsOf(key));
+      if(b.dataset.t==='all') visible.forEach(v=>cur.add(v));
+      if(b.dataset.t==='none') visible.forEach(v=>cur.delete(v));
+      if(b.dataset.t==='inv') visible.forEach(v=>cur.has(v)?cur.delete(v):cur.add(v));
+      setFilter(key, [...cur].join('|'));
+      paintDD(id);
+    };
+  });
   paintDD(id);
+}
+function remember(key, v){
+  if(!v) return;
+  const r = DD_RECENT[key] = DD_RECENT[key] || [];
+  const i = r.indexOf(v); if(i>=0) r.splice(i,1);
+  r.unshift(v); r.length = Math.min(r.length, 3);
 }
 function paintDD(id){
   const el = document.getElementById(id); if(!el) return;
   const {key, placeholder, opts, filter} = DD[id];
-  const cur = S[key];
+  const cur = new Set(valsOf(key));
   const list = el.querySelector('.dd-list');
-  const shown = filter ? opts.filter(o=>String(o.label).toLowerCase().includes(filter)) : opts;
-  const all = [{value:'', label:placeholder, meta:''}, ...shown];
+  let shown = filter ? opts.filter(o=>String(o.label).toLowerCase().includes(filter)) : opts;
+  /* آخر المستخدَم أولًا (بلا بحث فقط) */
+  const rec = (!filter && (DD_RECENT[key]||[]).filter(v=>opts.some(o=>o.value===v))) || [];
+  if(rec.length){
+    const rs = rec.map(v=>opts.find(o=>o.value===v));
+    shown = [...rs, ...shown.filter(o=>!rec.includes(o.value))];
+  }
+  const row = (o, recent) => `
+    <div class="dd-opt mult ${cur.has(o.value)?'sel':''}" role="option"
+         aria-selected="${cur.has(o.value)}" data-v="${esc(o.value)}">
+      <span class="ck" role="checkbox" aria-checked="${cur.has(o.value)}" tabindex="0"></span>
+      <button type="button" class="lbl">${recent?'🕘 ':''}${esc(o.label)}</button>
+      ${o.meta?`<span class="meta">${o.meta}</span>`:''}
+    </div>`;
   list.innerHTML = (filter && !shown.length)
     ? '<div class="dd-empty">لا توجد نتائج</div>'
-    : all.map(o=>`<button class="dd-opt ${o.value===cur?'sel':''}" role="option" data-v="${esc(o.value)}">
-        <span>${o.value===''?'<b>'+esc(o.label)+'</b>':esc(o.label)}</span>
-        <span style="display:flex;align-items:center;gap:7px">
-          ${o.meta?`<span class="meta">${o.meta}</span>`:''}<span class="tick">✓</span></span>
-      </button>`).join('');
-  list.querySelectorAll('.dd-opt').forEach(b=>{
-    b.onclick = e => { e.stopPropagation(); setFilter(key, b.dataset.v); closeAllDD(); };
+    : `<div class="dd-opt allrow ${cur.size===0?'sel':''}" data-v="">
+         <button type="button" class="lbl"><b>${esc(placeholder)}</b></button><span class="tick">✓</span>
+       </div>` + shown.map(o=>row(o, rec.includes(o.value))).join('');
+  list.querySelectorAll('.dd-opt').forEach(d=>{
+    const v = d.dataset.v;
+    const lbl = d.querySelector('.lbl');
+    lbl.onclick = e => { e.stopPropagation();
+      remember(key, v);
+      setFilter(key, v);                       // اختيار حصري (أو «الكل» عند الفراغ)
+      closeAllDD(); };
+    const ck = d.querySelector('.ck');
+    if(ck) ck.onclick = e => { e.stopPropagation();
+      const now = new Set(valsOf(key));
+      now.has(v) ? now.delete(v) : now.add(v);
+      remember(key, v);
+      setFilter(key, [...now].join('|'));
+      paintDD(id); };
   });
   const lbl = el.querySelector('.cur');
-  lbl.textContent = cur ? leafName(opts.find(o=>o.value===cur)?.label || cur) : placeholder;
-  lbl.classList.toggle('set', !!cur);
+  const map = {branch:'فروع', wh:'مستودعات', sup:'موردون', c1:'فئات', c2:'فرعية', c3:'دقيقة', life:'حالات', abc:'ABC'};
+  lbl.textContent = cur.size===0 ? placeholder
+    : cur.size===1 ? leafName(opts.find(o=>o.value===[...cur][0])?.label || [...cur][0])
+    : `${cur.size} ${map[key]||''}`.trim();
+  lbl.classList.toggle('set', cur.size>0);
 }
 function closeAllDD(){
   document.querySelectorAll('.dd.open').forEach(d=>{ d.classList.remove('open');
@@ -3005,17 +3408,19 @@ document.addEventListener('click', closeAllDD);
 /* ===== التصفية الهرمية: تغيير مستوى يمسح ما تحته ===== */
 function setFilter(key, val){
   S[key] = val;
-  /* تغيير المورّد قد يُخرج الفئات المختارة من النطاق — نتحقق أدناه */
-  if(key==='branch'){ /* الفرع لا يمسح الفئات، لكن قد تختفي بعضها */ }
   if(key==='c1'){ S.c2=''; S.c3=''; }
   if(key==='c2'){ S.c3=''; }
-  // تحقق أن الفئات المختارة ما زالت متاحة
-  const a1 = availableCats(1);
-  if(S.c1 && !a1.includes(S.c1)){ S.c1=''; S.c2=''; S.c3=''; }
-  const a2 = availableCats(2);
-  if(S.c2 && !a2.includes(S.c2)){ S.c2=''; S.c3=''; }
-  const a3 = availableCats(3);
-  if(S.c3 && !a3.includes(S.c3)) S.c3='';
+  // تحقق أن الفئات المختارة ما زالت متاحة (متعددة: تُشذَّب غير المتاحة)
+  const prune = (k2, avail) => {
+    if(!S[k2]) return;
+    const kept = String(S[k2]).split('|').filter(v=>avail.includes(v));
+    S[k2] = kept.join('|');
+  };
+  prune('c1', availableCats(1));
+  if(!S.c1){ S.c2=''; S.c3=''; }
+  prune('c2', availableCats(2));
+  if(!S.c2) S.c3='';
+  prune('c3', availableCats(3));
   render();
 }
 function clearAll(){ Object.keys(S).forEach(x=>S[x]=''); document.getElementById('fSearch').value=''; render(); }
@@ -3024,9 +3429,16 @@ function clearAll(){ Object.keys(S).forEach(x=>S[x]=''); document.getElementById
 function rebuildFilters(){
   // الفروع: كلها متاحة دائماً (مع أرقامها ضمن تصفية الفئة)
   const bs = branchStats();
-  buildDD('dd-branch','branch','كل الفروع والمستودعات',
+  buildDD('dd-branch','branch','كل الفروع',
     bs.map(b=>({value:b.name, label:b.central?b.name+' (مركزي)':b.name,
                 meta:k(b.rev>0?b.rev:b.v)})));
+
+  // المستودعات (قيمة المخزون الحالية في كل مستودع)
+  const wv = {};
+  D.stock.forEach(f=>{ wv[WH[f[SF.W]]] = (wv[WH[f[SF.W]]]||0) + f[SF.V]; });
+  buildDD('dd-wh','wh','كل المستودعات',
+    WH.map(w=>({value:w, label:w, meta:k(wv[w]||0)}))
+      .sort((a,b)=>(wv[b.value]||0)-(wv[a.value]||0)));
 
   // الموردون (مع عدد الأصناف وقيمة المخزون)
   const sv = {};
@@ -3063,11 +3475,14 @@ function drawCrumbs(){
   const w = document.getElementById('crumbWrap');
   const box = document.getElementById('crumbs');
   const parts = [];
-  if(S.branch) parts.push({k:'branch', t:S.branch});
-  if(S.sup) parts.push({k:'sup', t:S.sup});
-  if(S.c1) parts.push({k:'c1', t:S.c1});
-  if(S.c2) parts.push({k:'c2', t:leafName(S.c2)});
-  if(S.c3) parts.push({k:'c3', t:leafName(S.c3)});
+  const lab = (v, pl) => { const a=String(v).split('|');
+    return a.length===1 ? a[0] : a.length+' '+pl; };
+  if(S.branch) parts.push({k:'branch', t:lab(S.branch,'فروع')});
+  if(S.wh) parts.push({k:'wh', t:lab(S.wh,'مستودعات')});
+  if(S.sup) parts.push({k:'sup', t:lab(S.sup,'موردين')});
+  if(S.c1) parts.push({k:'c1', t:lab(S.c1,'فئات')});
+  if(S.c2) parts.push({k:'c2', t:leafName(lab(S.c2,'فرعية'))});
+  if(S.c3) parts.push({k:'c3', t:leafName(lab(S.c3,'دقيقة'))});
   if(!parts.length){
     box.innerHTML = '';            // ⭐ مسح المحتوى القديم — لا حالة عالقة
     w.style.display = 'none';
@@ -3080,7 +3495,8 @@ function drawCrumbs(){
         onclick="trimTo('${p.k}')">${esc(p.t)}</button>`).join('');
 }
 function trimTo(key){
-  if(key==='branch'){ S.sup=''; S.c1=''; S.c2=''; S.c3=''; }
+  if(key==='branch'){ S.wh=''; S.sup=''; S.c1=''; S.c2=''; S.c3=''; }
+  if(key==='wh'){ S.sup=''; S.c1=''; S.c2=''; S.c3=''; }
   if(key==='sup'){ S.c1=''; S.c2=''; S.c3=''; }
   if(key==='c1'){ S.c2=''; S.c3=''; }
   if(key==='c2'){ S.c3=''; }
@@ -3090,13 +3506,17 @@ function trimTo(key){
 /* ===== الشرائح ===== */
 function chips(){
   const box=document.getElementById('chips'); box.innerHTML='';
-  const map={branch:'الفرع',sup:'المورّد',c1:'الفئة',c2:'فرعية',c3:'دقيقة',life:'الحالة',abc:'ABC',q:'بحث'};
+  const map={branch:'الفرع',wh:'المستودع',sup:'المورّد',c1:'الفئة',c2:'فرعية',c3:'دقيقة',life:'الحالة',abc:'ABC',q:'بحث'};
+  const plural={branch:'فروع',wh:'مستودعات',sup:'موردين',c1:'فئات',c2:'فئات فرعية',c3:'فئات دقيقة',life:'حالات',abc:'فئات ABC'};
   let any=false;
   Object.entries(S).forEach(([key,val])=>{
     if(!val) return; any=true;
+    const vals=String(val).split('|');
     const c=document.createElement('span'); c.className='chip';
-    const show = key==='life' && String(val).indexOf('|')>=0
-      ? String(val).split('|').join(' أو ') : leafName(val);
+    const show = vals.length===1 ? leafName(val)
+      : (key==='life'||key==='abc') ? vals.join(' أو ')
+      : `${vals.length} ${plural[key]||''}`;
+    c.title = vals.map(leafName).join(' · ');
     c.innerHTML=`${map[key]}: ${esc(show)} <button aria-label="إزالة ${map[key]}">×</button>`;
     c.querySelector('button').onclick=()=>{ if(key==='q') document.getElementById('fSearch').value='';
       setFilter(key,''); };
@@ -3362,14 +3782,15 @@ function drawCharts(){
    الأعمدة المخفية تظهر في «صف تفاصيل» يُفتح بضغطة — لا تمرير أفقي.
    ═══════════════════════════════════════════════════════════════ */
 const PRIO = {
+  /* p1 = عمود دائم (يشمل الجوال، ≤4) · p2 = سطح المكتب فقط · p3 = لوحة التفاصيل فقط */
   tTopDead : [1,1,3,1,2,2],
-  tDead    : [3,1,3,1,3,1,2,2,2],
-  tBranch  : [3,1,1,3,2,2,1,2,3],
+  tDead    : [3,1,3,1,3,1,1,3,2],
+  tBranch  : [3,1,1,3,2,2,1,3,3],
   tWh      : [1,1,3,3,2,2],
-  tSup     : [1,1,3,3,2,2,3,2],
-  tProd    : [3,1,3,2,3,1,2,1,3,2,3,3],
+  tSup     : [1,1,3,3,3,3,3,2,2,3,3,3,1,3,2,3,1],
+  tProd    : [3,1,3,3,3,1,2,1,3,2,3,3],
   tTrans   : [1,3,1,1,3,2,1,3,2,3],
-  tRepl    : [1,1,3,2,3,1,2,2,1,3,2],
+  tRepl    : [1,1,3,2,3,1,2,3,1,3,2],
   tNeg     : [3,1,2,3,1,1,3],
   tRecon   : [1,1,2,2],
   tRevRecon: [1,1,2],
@@ -3378,7 +3799,10 @@ const PRIO = {
   tFixes   : [3,1,2,1,3,2],
   tMethod  : [1,2,3,3,2],
   tAbc     : [1,1,1,2,3,2],
-  tScores  : [1,1,3,2,2,3,2,3,3],   /* المحور · الدرجة دائمان — والباقي في التفاصيل */
+  tScores  : [1,1,3,2,2,3,2,3,3],
+  tSupCats : [1,2,1,1,2],
+  tSupBr   : [1,1,2,2],
+  tSupWh   : [1,1,2],
   /* ── تقرير الفرع ── */
   brFin    : [1,1,2],
   brTopA   : [1,1,3,2],
@@ -3394,6 +3818,16 @@ const PRIO = {
 
 const CHEV = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
 
+/* ═══ طبقة الجداول المؤسسية ═══
+   ملخص أولًا (أعمدة أساسية) · تفاصيل عند الطلب (لوحة متحركة، واحدة مفتوحة) ·
+   فرز بالنقر · ترقيم ذكي (>60 صفًا) · التصدير يشمل كامل المجموعة المصفّاة لا الصفحة المعروضة */
+const TBLS = {};                                     // حالة كل جدول: صفحة/فرز
+const PAGE_SIZE = 60;
+const plainTxt = html => { const d=document.createElement('div'); d.innerHTML=html;
+  return d.textContent.replace(/\s+/g,' ').trim(); };
+const sortKey = v => { const t=String(v).replace(/[,٬\s]/g,'').replace('ر.س','').replace('%','');
+  const n2=parseFloat(t); return isNaN(n2)? String(v) : n2; };
+
 function tbl(id, cols, rows, onRow){
   if(!live(id)) return;                       // صفحة غير نشطة → تأجيل
   const t = document.getElementById(id); if(!t) return;
@@ -3401,10 +3835,7 @@ function tbl(id, cols, rows, onRow){
   const pr = PRIO[id] || [];
   cols.forEach((c, i) => { if(!c.p) c.p = pr[i] || 1; });
 
-  /* ── حارس التخطيط ──
-     أي جدول نُسي من خريطة PRIO كانت كل أعمدته تظهر على الجوال، ومع
-     table-layout:fixed يصبح كل عمود ~40px فينكسر النص حرفًا حرفًا.
-     الحارس يبقي 4 أعمدة دائمة كحدّ أقصى ويدفع الباقي إلى صف التفاصيل. */
+  /* حارس التخطيط: ≤4 أعمدة دائمة (p=1) كي لا ينعصر الجوال */
   const MAX_ALWAYS = 4;
   const always = cols.filter(c => c.p === 1);
   if(always.length > MAX_ALWAYS){
@@ -3412,50 +3843,156 @@ function tbl(id, cols, rows, onRow){
     if(!PRIO[id]) console.warn('[tbl] جدول بلا أولويات:', id, '— طُبّق الحارس تلقائيًا');
   }
 
-  const hidden = cols.filter(c => c.p > 1);   // الأعمدة القابلة للإخفاء
+  const hidden = cols.filter(c => c.p > 1);   // ما ليس عمودًا دائمًا → في لوحة التفاصيل
   const exp    = hidden.length > 0;
-  const span   = cols.length + (exp ? 1 : 0);
+
+  /* ── حالة الجدول (فرز + صفحة) — تُصفَّر الصفحة عند تغيّر البيانات ── */
+  const sig = rows.length + '|' + (rows[0] ? plainTxt(String(rows[0].c ?? rows[0].n ?? rows[0].name ?? '')) : '');
+  const st = TBLS[id] = TBLS[id] || {page:0, sortI:-1, sortD:1, sig:''};
+  if(st.sig !== sig){ st.page = 0; st.sig = sig; }
+
+  let view = rows;
+  if(st.sortI >= 0 && cols[st.sortI]){
+    const c = cols[st.sortI];
+    view = [...rows].sort((a,b)=>{
+      const va = sortKey(c.s ? c.s(a) : plainTxt(c.f(a)));
+      const vb = sortKey(c.s ? c.s(b) : plainTxt(c.f(b)));
+      return (va<vb?-1:va>vb?1:0) * st.sortD;
+    });
+  }
+  const paged = view.length > PAGE_SIZE;
+  const nPages = paged ? Math.ceil(view.length / PAGE_SIZE) : 1;
+  st.page = Math.min(st.page, nPages-1);
+  const slice = paged ? view.slice(st.page*PAGE_SIZE, (st.page+1)*PAGE_SIZE) : view;
+
+  /* ── التصدير الكامل: كل الصفوف المصفّاة بغضّ النظر عن الصفحة المعروضة ── */
+  t._exportFull = () => ({
+    head: cols.map(c => plainTxt(c.h)),
+    rows: view.map(r => cols.map(c => plainTxt(c.f(r)))),
+  });
+
+  const oldPager = t.parentElement && t.parentElement.querySelector(':scope > .tpager');
+  if(oldPager) oldPager.remove();
 
   if(!rows.length){
-    t.innerHTML = `<tbody><tr><td class="empty" colspan="${span}">لا توجد بيانات مطابقة للتصفية</td></tr></tbody>`;
+    t.innerHTML = `<tbody><tr><td class="empty" colspan="${cols.length + (exp?1:0)}">لا توجد بيانات مطابقة للتصفية</td></tr></tbody>`;
     return;
   }
 
+  const arr = i => st.sortI===i ? (st.sortD>0?'▲':'▼') : '↕';
   const head = `<thead><tr>${exp ? '<th class="col-exp" aria-hidden="true"></th>' : ''}` +
-    cols.map(c => `<th class="pri-${c.p}${c.num ? ' t-num' : ''}">${c.h}</th>`).join('') + '</tr></thead>';
+    cols.map((c,i) => `<th class="pri-${c.p}${c.num ? ' t-num' : ''} sortable${st.sortI===i?' sorted':''}"
+        data-si="${i}" role="button" tabindex="0"
+        aria-sort="${st.sortI===i?(st.sortD>0?'ascending':'descending'):'none'}"
+        title="فرز حسب ${plainTxt(c.h)}">${c.h}<span class="sarr">${arr(i)}</span></th>`).join('') +
+    '</tr></thead>';
 
-  const body = '<tbody>' + rows.map((r, i) => {
-    const tds = cols.map(c =>
-      `<td class="pri-${c.p}${c.num ? ' t-num' : ''}">${c.f(r)}</td>`).join('');
+  const primeI = cols.findIndex(c => c.p===1 && !c.num);   // خلية الاسم: نقرها يفتح التفاصيل
+  const body = '<tbody>' + slice.map((r, i) => {
+    const tds = cols.map((c,ci) =>
+      `<td class="pri-${c.p}${c.num ? ' t-num' : ''}${ci===primeI&&exp?' prime':''}">` +
+      (ci===primeI&&exp ? `<span class="pn" role="button" tabindex="0" title="عرض التفاصيل">${c.f(r)}</span>` : c.f(r)) +
+      `</td>`).join('');
     const btn = exp
       ? `<td class="col-exp"><button class="exp-btn" type="button" aria-expanded="false"
            aria-label="عرض التفاصيل">${CHEV}</button></td>` : '';
     const det = exp
-      ? `<tr class="det-row"><td colspan="${span}"><div class="det-grid">` +
-        hidden.map(c => `<div class="det-item"><span>${c.h}</span><b>${c.f(r)}</b></div>`).join('') +
-        '</div></td></tr>' : '';
+      ? `<tr class="det-row"><td colspan="${cols.length+1}"><div class="dwrap"><div><div class="det-grid">` +
+        hidden.map(c => `<div class="det-item${c.p===2?' det-p2':''}"><span>${plainTxt(c.h)}</span><b>${c.f(r)}</b></div>`).join('') +
+        (onRow ? `<div class="det-act"><button type="button" data-act="1">فتح التفاصيل الكاملة ↗</button></div>` : '') +
+        '</div></div></div></td></tr>' : '';
     return `<tr class="row" data-i="${i}">${btn}${tds}</tr>${det}`;
   }).join('') + '</tbody>';
 
   t.innerHTML = head + body;
-  t.classList.toggle('static', !onRow);        // بلا onRow → لا مؤشر يد (لا وعد كاذب)
+  t.classList.toggle('static', !onRow && !exp); // صف بلا أي فعل (لا نافذة ولا تفاصيل) → لا مؤشر يد
+
+  /* مقسّم الصفحات */
+  if(paged){
+    const pg = document.createElement('div');
+    pg.className = 'tpager';
+    const lo = st.page*PAGE_SIZE+1, hi = Math.min(view.length,(st.page+1)*PAGE_SIZE);
+    pg.innerHTML = `
+      <button type="button" data-pg="prev" ${st.page===0?'disabled':''}>‹ السابق</button>
+      <span class="pinfo">صفحة ${F.format(st.page+1)} من ${F.format(nPages)}</span>
+      <button type="button" data-pg="next" ${st.page>=nPages-1?'disabled':''}>التالي ›</button>
+      <span>يعرض ${F.format(lo)}–${F.format(hi)} من ${F.format(view.length)} · التصدير يشمل الكل</span>`;
+    if(t.insertAdjacentElement) t.insertAdjacentElement('afterend', pg);
+    else if(t.parentElement && t.parentElement.appendChild) t.parentElement.appendChild(pg);
+    pg.querySelectorAll('button:not([disabled])').forEach(b => b.onclick = () => {
+      st.page += (b.dataset.pg==='next'?1:-1);
+      tbl(id, cols, rows, onRow);
+      t.closest?.('.tw')?.scrollTo?.({top:0});
+    });
+  }
+
+  /* فرز بالنقر على الرأس */
+  t.querySelectorAll('thead th.sortable').forEach(th => {
+    const fireS = () => {
+      const i = +th.dataset.si;
+      if(st.sortI===i) st.sortD *= -1; else { st.sortI = i; st.sortD = 1; }
+      st.page = 0;
+      tbl(id, cols, rows, onRow);
+    };
+    th.onclick = fireS;
+    th.onkeydown = e => { if(e.key==='Enter'||e.key===' '){ e.preventDefault(); fireS(); } };
+  });
+
+  /* colspan = المرئي فعلًا (إصلاح الأعمدة الشبحية) — det-row مرئي دائمًا الآن */
+  const visCount = () => { const r0=t.querySelector('tbody tr.row');
+    const kids = (r0 && r0.children) ? Array.from(r0.children) : [];
+    const v = kids.filter(c=>c && c.offsetParent).length;
+    return Math.max(1, v || kids.length || 1); };
+  const applySpan = () => { const v=visCount();
+    t.querySelectorAll('tr.det-row > td').forEach(td => td.colSpan = v); };
+  applySpan();
+  if(!window._detSpanRO){
+    window._detSpanRO = true;
+    window.addEventListener('resize', () => {
+      clearTimeout(window._detSpanT);
+      window._detSpanT = setTimeout(() =>
+        document.querySelectorAll('table').forEach(tb => {
+          if(tb._applySpan){ tb._applySpan(); return; }        // المجمّعة تصحّح نفسها
+          const r0 = tb.querySelector('tbody tr.row');
+          const kids = (r0 && r0.children) ? Array.from(r0.children) : [];
+          if(!kids.length) return;
+          const v = Math.max(1, kids.filter(c=>c && c.offsetParent).length || kids.length);
+          tb.querySelectorAll('tr.det-row > td').forEach(td => td.colSpan = v);
+        }), 120);
+    });
+  }
 
   t.querySelectorAll('tbody tr.row').forEach(tr => {
-    const btn = tr.querySelector('.exp-btn');
-    if(btn) btn.onclick = e => {                       // فتح التفاصيل (لا يفتح النافذة)
-      e.stopPropagation();
-      const on = tr.classList.toggle('open');
-      btn.setAttribute('aria-expanded', String(on));
+    const toggle = () => {
+      const was = tr.classList.contains('open');
+      /* واحدة مفتوحة فقط */
+      t.querySelectorAll('tr.row.open').forEach(o => { if(o!==tr){ o.classList.remove('open');
+        o.querySelector('.exp-btn')?.setAttribute('aria-expanded','false'); } });
+      tr.classList.toggle('open', !was);
+      tr.querySelector('.exp-btn')?.setAttribute('aria-expanded', String(!was));
     };
+    const btn = tr.querySelector('.exp-btn');
+    if(btn) btn.onclick = e => { e.stopPropagation(); toggle(); };
+    const pn = tr.querySelector('td.prime .pn');
+    if(pn){
+      pn.onclick = e => { e.stopPropagation(); toggle(); };
+      pn.onkeydown = e => { if(e.key==='Enter'||e.key===' '){ e.preventDefault(); e.stopPropagation(); toggle(); } };
+    }
+    const det = tr.nextElementSibling;
+    const act = det && det.querySelector('.det-act button');
+    if(act && onRow) act.onclick = e => { e.stopPropagation(); onRow(slice[+tr.dataset.i]); };
     if(onRow){
-      const fire = () => onRow(rows[+tr.dataset.i]);
+      const fire = () => onRow(slice[+tr.dataset.i]);
       tr.onclick = fire;
-      /* وصولية: الصف قابل للتركيز ويستجيب لـ Enter/Space */
       tr.tabIndex = 0;
       tr.setAttribute('role', 'button');
       tr.onkeydown = e => {
         if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); fire(); }
       };
+    } else {
+      tr.onclick = toggle;                       /* بلا فعل صفّي → الصف كله يفتح التفاصيل */
+      tr.tabIndex = 0;
+      tr.onkeydown = e => { if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggle(); } };
     }
   });
 }
@@ -3469,7 +4006,7 @@ function drawTables(){
 
   /* الراكد */
   const dead = R.filter(x=>['راكد','بطيء','متقادم'].includes(x.lc))
-    .sort((a,b)=>b.v-a.v).slice(0,300);
+    .sort((a,b)=>b.v-a.v);
   const maxV = Math.max(...dead.map(x=>x.v),1);
   const rec = x => x.lc==='متقادم' ? 'تصفية فورية'
     : (x.lc==='راكد' ? (x.v>5000?'تصفية / خصم':'خصم ترويجي')
@@ -3527,19 +4064,100 @@ function drawTables(){
     setFilter('branch', (br && br.branch) || r.n);
   });
 
-  /* الموردون */
+  /* ═══ تقرير الموردين التنفيذي ═══ */
   const sup = supplierStats();
-  const maxSp = Math.max(...sup.map(s=>s.spend),1);
+  const totSpend = sup.reduce((a2,b2)=>a2+b2.spend,0);
+  const top5dep = sup.slice().sort((a2,b2)=>b2.dep-a2.dep).slice(0,5).reduce((a2,b2)=>a2+b2.dep,0);
+  const supDeadV = sup.reduce((a2,b2)=>a2+b2.deadV,0);
+  const noVend = VIEW.rows.filter(x=>!vendorOf.get(x.c)).length;
+  setHTML('supKpis', [
+    {t:'موردون ضمن التصفية', v:n(sup.length), s:'انقر للترتيب الكامل', a:"go('supplier')"},
+    {t:'إجمالي الإنفاق (شراء)', v:ksar(totSpend), s:F.format(sup.reduce((a2,b2)=>a2+b2.orders,0))+' أمر شراء',
+     a:"document.getElementById('cSup').closest('.card').scrollIntoView({behavior:'smooth'})"},
+    {t:'تركّز أعلى 5 موردين', v:F1.format(top5dep)+'%', s:'انقر لتصفية اللوحة بهم',
+     a:"setFilter('sup', supplierStats().slice().sort((a2,b2)=>b2.dep-a2.dep).slice(0,5).map(x3=>x3.n).join('|'))"},
+    {t:'جامد الموردين', v:ksar(supDeadV), s:'راكد + متقادم لدى مورّديك', a:"setFilter('life','راكد|متقادم')"},
+    {t:'منتجات بلا مورد', v:n(noVend), s:'لا تحليل مورد لها — اربطها في أودو', a:"go('audit')"},
+  ].map(x2=>`<div class="kpi ${x2.a?'clickable':''}" ${x2.a?`onclick="${x2.a}" role="button" tabindex="0"`:''}>
+      <div class="kt">${x2.t}</div><div class="kv">${x2.v}</div><div class="ks">${x2.s}</div></div>`).join(''));
+
+  const maxSp = Math.max(...sup.map(s2=>s2.spend),1);
   tbl('tSup',[
     {h:'المورد',f:r=>`<b>${esc(r.n)}</b>`},
     {h:'الإنفاق',num:1,f:r=>sar(r.spend)},
     {h:'',f:r=>bar(r.spend,maxSp)},
-    {h:'أصنافه هنا',num:1,f:r=>n(r.skus)},
+    {h:'أوامر/شهر',num:1,f:r=>r.freq?F1.format(r.freq):'—'},
+    {h:'مهلة',num:1,f:r=>r.lead>0?F1.format(r.lead)+' ي':'—'},
+    {h:'أصنافه',num:1,f:r=>n(r.skus)},
+    {h:'مزيج ABC',f:r=>`<span class="num">${r.abc.A||0}/${r.abc.B||0}/${r.abc.C||0}</span>`},
     {h:'قيمة مخزونه',num:1,f:r=>sar(r.v)},
     {h:'إيراده',num:1,f:r=>sar(r.rev)},
-    {h:'مهلة التسليم',num:1,f:r=>r.lead>0?n(r.lead)+' يوم':'—'},
-    {h:'راكد',num:1,f:r=>r.deadV>0?`<b style="color:var(--bad)">${F.format(r.deadV)}</b>`:'—'},
-  ], sup, r => setFilter('sup', r.n));     // ⭐ النقر يُصفّي بهذا المورّد
+    {h:'اعتماد',num:1,f:r=>F1.format(r.dep)+'%'},
+    {h:'هامشه',num:1,f:r=>F1.format(r.margin)+'%'},
+    {h:'دورانه',num:1,f:r=>r.turn>0?F1.format(r.turn):'—'},
+    {h:'جامده',num:1,f:r=>r.deadV>0?`<b style="color:var(--bad)">${k(r.deadV)}</b>`:'—'},
+    {h:'بطيئه',num:1,f:r=>r.slowV>0?k(r.slowV):'—'},
+    {h:'صحته',num:1,f:r=>`<b style="color:${r.health>=70?'var(--ok)':(r.health>=45?'var(--warn)':'var(--bad)')}">${Math.round(r.health)}</b>`},
+    {h:'آخر بيع',num:1,f:r=>r.lastDs>=9999?'—':n(r.lastDs)+' ي'},
+    {h:'المخاطرة',num:1,f:r=>`<b style="color:${r.risk>=55?'var(--bad)':(r.risk>=30?'var(--warn)':'var(--ok)')}">${Math.round(r.risk)}</b>`},
+  ], sup, r => setFilter('sup', r.n));     // ⭐ النقر = تصفية اللوحة كلها + حفر تفصيلي
+
+  /* ── الحفر التفصيلي: يظهر عند اختيار مورّد واحد بالضبط ── */
+  const supSel = S.sup && String(S.sup).indexOf('|')<0 ? S.sup : '';
+  const det = document.getElementById('supDetail');
+  if(det){
+    det.style.display = supSel ? '' : 'none';
+    if(supSel){
+      const d2 = supplierDetail(supSel);
+      setText('supDetailTitle', '🔎 حفر تفصيلي: ' + supSel);
+      const st = d2.st;
+      setHTML('supDKpis', [
+        {t:'إيراده', v:ksar(st.rev||0), s:`اعتماد ${F1.format(st.dep||0)}%`},
+        {t:'قيمة مخزونه', v:ksar(st.v||0), s:`${n(st.skus||0)} صنفًا`},
+        {t:'هامشه', v:F1.format(st.margin||0)+'%', s:`ربح ${k(st.gp||0)}`},
+        {t:'جامده', v:ksar(st.deadV||0), s:`${F1.format(st.deadPct||0)}% من مخزونه`},
+        {t:'مخاطرته', v:Math.round(st.risk||0)+'/100', s:`صحة ${Math.round(st.health||0)} · Z ${Math.round(st.zShare||0)}%`},
+      ].map(x2=>`<div class="kpi static"><div class="kt">${x2.t}</div><div class="kv">${x2.v}</div><div class="ks">${x2.s}</div></div>`).join(''));
+      mk('cSupTrend',{type:'line',data:{labels:MO.map(m2=>m2.slice(5)),
+        datasets:[{label:'الإيراد',data:d2.trend,fill:true,tension:.35,
+          borderColor:cv('--brand2'),backgroundColor:'rgba(31,127,168,.12)'}]},options:baseOpts()});
+      tbl('tSupCats',[
+        {h:'الفئة',f:r=>`<b>${esc(r.name)}</b>`},
+        {h:'أصناف',num:1,f:r=>n(r.n)},
+        {h:'إيراد',num:1,f:r=>sar(r.rev)},
+        {h:'مخزون',num:1,f:r=>sar(r.v)},
+        {h:'جامد',num:1,f:r=>r.deadV>0?`<b style="color:var(--bad)">${k(r.deadV)}</b>`:'—'},
+      ], d2.cats, r=>setFilter('c1', r.name));
+      tbl('tSupBr',[
+        {h:'الفرع',f:r=>`<b>${esc(r.name)}</b>`},
+        {h:'إيراده هناك',num:1,f:r=>sar(r.rev)},
+        {h:'ربحه',num:1,f:r=>sar(r.gp)},
+        {h:'كمية',num:1,f:r=>n1(r.q)},
+      ], d2.branches, r=>setFilter('branch', r.name));
+      tbl('tSupWh',[
+        {h:'المستودع',f:r=>`<b>${esc(r.name)}</b>`},
+        {h:'قيمته هناك',num:1,f:r=>sar(r.v)},
+        {h:'كمية',num:1,f:r=>n1(r.q)},
+      ], d2.whs, r=>setFilter('wh', r.name));
+      const nProd = d2.st.skus || 0;
+      setHTML('supTopPrev', `
+        <div class="sup-prev">
+          <div>
+            <b style="font-size:14px">${F.format(nProd)} منتجًا</b>
+            <span style="color:var(--muted)"> · مخزون ${k(d2.st.v||0)} · جامد ${k(d2.st.deadV||0)}
+            · أعلى فئاته: ${esc((d2.cats[0]||{}).name||'—')}${d2.cats[1]?' و'+esc(d2.cats[1].name):''}</span>
+            <div class="csub" style="margin-top:4px">القائمة الكاملة في صفحة المنتجات — بفلاتر مستقلة وبحث وفرز وترقيم وتصدير</div>
+          </div>
+          <button type="button" class="go-products"
+            onclick="go('products')">عرض منتجات المورّد (${F.format(nProd)}) ↗</button>
+        </div>`);
+      setHTML('supAlerts', d2.alerts.map(a2=>
+        `<div class="note" style="border-inline-start:3px solid var(--${a2.t==='bad'?'bad':(a2.t==='warn'?'warn':'ok')});margin-bottom:7px">${esc(a2.m)}</div>`).join(''));
+      setHTML('supRecs', d2.recs.length ? d2.recs.map(r2=>
+        `<div class="note" style="margin-bottom:7px">▸ ${esc(r2)}</div>`).join('')
+        : '<div class="note">لا توصيات — أداء سليم ضمن التصفية الحالية</div>');
+    }
+  }
 
   /* المنتجات */
   setText('prodCount', `${F.format(R.length)} منتج ضمن التصفية الحالية`);
@@ -3556,7 +4174,7 @@ function drawTables(){
     {h:'الإيراد',num:1,f:r=>sar(r.rev)},
     {h:'الهامش',num:1,f:r=>n1(r.mg)+'%'},
     {h:'الدوران',num:1,f:r=>F1.format(r.to)},
-  ], R.slice(0,600), r=>productModal(r.c));
+  ], R, r=>productModal(r.c));
 
   /* جدول تفصيل ABC (كان يتيمًا) */
   const am = {};
@@ -3681,8 +4299,16 @@ function drawTransfer(){
     {l:'إجمالي المخزون الجامد', v:ksar(idle), f:'في المواقع المصدر', c:'warn'},
     {l:'فروع مصدر', v:unit(F.format(new Set(T.map(x=>x.from)).size),'موقع'), f:'لديها فائض جامد', c:'brand'},
     {l:'فروع وجهة', v:unit(F.format(new Set(T.map(x=>x.to)).size),'فرع'), f:'لديها طلب فعلي', c:'brand'},
-  ].map(c=>`<div class="card kpi ${c.c}"><div class="klabel">${c.l}</div>
+  ].map((c,i)=>`<div class="card kpi ${c.c}" role="button" tabindex="0" data-tr="${i}"
+      title="${['يعرض جدول الفرص','يعرض جدول الفرص','يعرض جدول الفرص','يعرض مخطط الفروع المصدر','يعرض مخطط فروع الوجهة'][i]}"><div class="klabel">${c.l}</div>
      <div class="kval">${c.v}</div><div class="kfoot">${c.f}</div></div>`).join(''));
+  document.querySelectorAll('#trKpis .kpi').forEach(el=>{
+    const tgt = ['tTrans','tTrans','tTrans','cTrFrom','cTrTo'][+el.dataset.tr];
+    const fire = ()=>{ const t2=document.getElementById(tgt);
+      if(t2) t2.closest('.card').scrollIntoView({behavior:'smooth', block:'start'}); };
+    el.onclick=fire;
+    el.onkeydown=e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); fire(); } };
+  });
 
   const maxV = Math.max(...T.map(x=>x.value), 1);
   tbl('tTrans',[
@@ -3697,7 +4323,7 @@ function drawTransfer(){
     {h:'',f:r=>bar(r.value,maxV)},
     {h:'الطلب في الوجهة',num:1,f:r=>n1(r.demand)+' وحدة'},
     {h:'أيام جمود هنا',num:1,f:r=>r.dsHere>=9999?'لم يُبع':n(r.dsHere)},
-  ], T.slice(0,300), r=>productModal(r.c));
+  ], T, r=>productModal(r.c));
 
   const agg=(key)=>{ const m={}; T.forEach(x=>{ m[x[key]]=(m[x[key]]||0)+x.value; });
     return Object.entries(m).sort((a,b)=>b[1]-a[1]).slice(0, isMobile()?7:10); };
@@ -3711,6 +4337,7 @@ function drawTransfer(){
 }
 
 /* ═══════════ التزويد والنفاد ═══════════ */
+let rpF = '';                                  // فلتر محلي لجدول التزويد تقوده المؤشرات
 function drawReplenish(){
   const R = replenish();
   const BAD=cv('--bad'), OK=cv('--ok'), WARN=cv('--warn'), BR_=cv('--brand'), MU=cv('--muted');
@@ -3727,8 +4354,20 @@ function drawReplenish(){
     {l:'⭐ يمكن تلبيتها بتحويل', v:unit(F.format(byTr.length),'بند'), f:'بلا أي شراء جديد', c:'ok'},
     {l:'توفير محتمل بالشراء', v:ksar(save), f:'بالتحويل بدل الشراء', c:'ok'},
     {l:'⚠ تحتاج جردًا لا شراءً', v:unit(F.format(negs.length),'بند'), f:'رصيدها سالب', c:'bad'},
-  ].map(c=>`<div class="card kpi ${c.c}"><div class="klabel">${c.l}</div>
+  ].map((c,i)=>`<div class="card kpi ${c.c} ${rpF===['','حرج','تحويل','تحويل','سالب'][i]&&i>0?'on-flt':''}"
+      role="button" tabindex="0" data-rp="${i}"
+      title="${['يعرض كل البنود','يُصفّي الجدول على الحرِج','يُصفّي على القابل للتحويل','يُصفّي على القابل للتحويل','يُصفّي على الرصيد السالب'][i]}">
+      <div class="klabel">${c.l}</div>
      <div class="kval">${c.v}</div><div class="kfoot">${c.f}</div></div>`).join(''));
+  document.querySelectorAll('#rpKpis .kpi').forEach(el=>{
+    const mode = ['','حرج','تحويل','تحويل','سالب'][+el.dataset.rp];
+    const fire = ()=>{ rpF = (rpF===mode)? '' : mode; drawReplenish(); };
+    el.onclick=fire;
+    el.onkeydown=e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); fire(); } };
+  });
+  const RF = rpF==='حرج' ? R.filter(x=>x.urgency==='حرج')
+    : rpF==='تحويل' ? R.filter(x=>x.action==='تحويل داخلي')
+    : rpF==='سالب' ? R.filter(x=>x.hasNeg) : R;
 
   const uB={'حرج':'b-راكد','عاجل':'b-بطيء','قريب':'b-C'};
   const maxRisk = Math.max(...R.map(x=>x.atRisk),1);
@@ -3748,7 +4387,7 @@ function drawReplenish(){
         : (r.action==='تحويل داخلي'
             ? `<span class="badge b-نشط">تحويل من ${esc(short(r.src,16))}</span>`
             : `<span class="pill">شراء</span>`)},
-  ], R.slice(0,300), r=>productModal(r.c));
+  ], RF, r=>productModal(r.c));
 
   const uc={'حرج':crit.length,'عاجل':R.filter(x=>x.urgency==='عاجل').length,
             'قريب':R.filter(x=>x.urgency==='قريب').length};
@@ -4023,6 +4662,12 @@ function drawAudit(){
     ['منتجات سعرها < تكلفتها', q.below_cost, null, 'متوسط', 'بيع بخسارة دون انتباه', 'مراجعة التسعير'],
     ['صفوف مخزون بلا قيمة', q.missing_val, null, 'منخفض', 'قيمتها تُحسب صفرًا', 'إعادة تقييم'],
     ['منتجات بمخزون بلا مورد', q.no_vendor, null, 'منخفض', 'لا مهلة توريد ولا تحليل مورد', 'ربط المورد'],
+    ['أكواد منسوبة لأكثر من مورّد', (window._dualVendorN ??= (()=>{ const m=new Map();
+        D.prodVendor.forEach(x=>m.set(x.c,(m.get(x.c)||new Set()).add(x.v)));
+        return [...m.values()].filter(v=>v.size>1).length; })()),
+      null, 'متوسط', 'اللوحة تعتمد المورد الأساسي (الأول في أودو) لكل التحليلات', 'توحيد المورد الأساسي في أودو'],
+    ['فارق تقريب طبقتين (فروع↔منتجات)', '±168 ر.س', null, 'منخفض',
+      '0.0008% — تقريب عمود المنتج مقابل الحقائق الخام', 'يزول بإعادة توليد البيانات بكسور عشرية'],
   ]);
 
   /* ── الأخطاء المُصحّحة ── */
@@ -4062,7 +4707,7 @@ function drawAudit(){
     ['قاعدة الاستحالة','أيام بلا بيع ≤ مدة الحيازة','منطقية','—','<span class="badge b-نشط">تمنع تصنيفًا خاطئًا</span>'],
     ['راكد','بلا بيع ≥ ٩٠ يومًا (بعد تطبيق القاعدة)','طبقات التقييم','٧٠٥ أيام','<span class="badge b-نشط">دقيق</span>'],
     ['متقادم','بلا بيع ≥ ١٨٠ يومًا (بعد تطبيق القاعدة)','طبقات التقييم','٧٠٥ أيام','<span class="badge b-نشط">دقيق</span>'],
-    ['بطيء','عتبة متدرّجة: ٣٠/٤٥/٦٠/٧٥ يومًا حسب السعر','محسوب','٧٠٥ أيام','<span class="badge b-نشط">دقيق</span>'],
+    ['بطيء','إنذار مبكر دون الـ٩٠ حصرًا — عتبة سعرية ٣٠/٤٥/٦٠/٧٥ يومًا (لا يتقاطع مع الراكد)','محسوب','٧٠٥ أيام','<span class="badge b-نشط">دقيق</span>'],
     ['ABC','تراكمي ٨٠/٩٥ على المجموعة المصفّاة','محسوب','١٨١ يومًا','<span class="badge b-نشط">دقيق</span>'],
     ['XYZ','معامل الاختلاف للطلب الشهري','المبيعات','٦ أشهر','<span class="badge b-جديد">إرشادي</span>'],
     ['التغطية','المخزون الموجب ÷ (COGS ÷ ١٨١)','محسوب','١٨١ يومًا','<span class="badge b-نشط">دقيق</span>'],
@@ -4120,18 +4765,29 @@ function drawKPIs(){
 
   const dk=[
     {l:'رأس المال المعطّل', v:ksar(K.deadV+K.slowV),
-     f:K.invVal>0?`${((K.deadV+K.slowV)/Math.max(1,K.invVal)*100).toFixed(1)}% من المخزون`:'—', c:'bad'},
+     f:K.invVal>0?`${((K.deadV+K.slowV)/Math.max(1,K.invVal)*100).toFixed(1)}% من المخزون`:'—', c:'bad',
+     flt:{life:'راكد|متقادم|بطيء'}, tip:'يُصفّي اللوحة على كل الجامد'},
     {l:'راكد (٣ أشهر+)', v:unit(F.format(VIEW.rows.filter(x=>x.lc==='راكد').length),'منتج'),
-     f:'بلا بيع ٩٠ يومًا+', c:'bad'},
+     f:'بلا بيع ٩٠ يومًا+', c:'bad', flt:{life:'راكد'}, tip:'يُصفّي على الراكد'},
     {l:'متقادم (٦ أشهر+)', v:unit(F.format(VIEW.rows.filter(x=>x.lc==='متقادم').length),'منتج'),
-     f:'بلا بيع ١٨٠ يومًا+ · تصفية فورية', c:'bad'},
-    {l:'بطيء', v:unit(F.format(K.slowN),'منتج'), f:'حسب عتبة السعر', c:'warn'},
-    {l:'قيمة قابلة للتحرير', v:ksar(K.deadV), f:'بالتصفية', c:'bad'},
+     f:'بلا بيع ١٨٠ يومًا+ · تصفية فورية', c:'bad', flt:{life:'متقادم'}, tip:'يُصفّي على المتقادم'},
+    {l:'بطيء', v:unit(F.format(K.slowN),'منتج'), f:'حسب عتبة السعر', c:'warn',
+     flt:{life:'بطيء'}, tip:'يُصفّي على البطيء'},
+    {l:'قيمة قابلة للتحرير', v:ksar(K.deadV), f:'بالتصفية', c:'bad',
+     flt:{life:'راكد|متقادم'}, tip:'يُصفّي على الراكد والمتقادم'},
   ];
 
   setHTML('deadKpis', dk.map(c=>
     `<div class="card kpi ${c.c}"><div class="klabel">${c.l}</div>
      <div class="kval">${c.v}</div><div class="kfoot">${c.f}</div></div>`).join(''));
+  document.querySelectorAll('#deadKpis .kpi').forEach((el, i) => {
+    const c = dk[i]; if(!c.flt) return;
+    el.tabIndex = 0; el.setAttribute('role','button'); el.title = c.tip || '';
+    const fire = () => { const keep = {life: c.flt.life}; Object.keys(S).forEach(k2=>{ if(k2!=='branch'&&k2!=='wh') S[k2]=''; });
+      Object.assign(S, keep); render(); };
+    el.onclick = fire;
+    el.onkeydown = e => { if(e.key==='Enter'||e.key===' '){ e.preventDefault(); fire(); } };
+  });
 }
 
 /* ===== النوافذ ===== */
@@ -4573,6 +5229,276 @@ window.addEventListener('resize', ()=>{ clearTimeout(rz);
   }, 200); });
 
 render();
+
+/* ═══════════════════════════════════════════════════════════════
+   المساعد الذكي — رؤى المخزون
+   بنية مزدوجة صادقة:
+   · Claude AI (Anthropic API) عند توفر البيئة الوسيطة
+   · محرك رؤى محلي حتمي يحسب من محرك اللوحة نفسه عند التعذر
+   المساعد لا يرى بياناتك الخام — يُرسَل ملخص مجمّع فقط (~2KB)
+   ═══════════════════════════════════════════════════════════════ */
+(function(){
+'use strict';
+const HIST = [];                 // ذاكرة الجلسة (لا تخزين دائم)
+let AI_MODE = null;              // 'claude' | 'local' — يُحدد عند أول سؤال
+let BUSY = false;
+
+/* ── سياق مضغوط للنموذج: مجاميع لا صفوف خام ── */
+function aiContext(){
+  const K = kpis();
+  const cnt = {}; VIEW.rows.forEach(x=>cnt[x.lc]=(cnt[x.lc]||0)+1);
+  const dead5 = VIEW.rows.filter(x=>['راكد','متقادم'].includes(x.lc))
+    .sort((a,b)=>b.v-a.v).slice(0,5)
+    .map(x=>({الاسم:x.n.trim().slice(0,30), الكود:x.c, القيمة:Math.round(x.v),
+              الحالة:x.lc, أيام_بلا_بيع:x.ds}));
+  const bs = branchStats().slice().sort((a,b)=>b.rev-a.rev);
+  const sup = supplierStats().slice(0,5).map(s=>({الاسم:s.n.slice(0,28),
+    الإنفاق:Math.round(s.spend), جامده:Math.round(s.deadV), مخاطرته:Math.round(s.risk)}));
+  return {
+    الفترة:'النصف الأول 2026', العملة:'ريال سعودي',
+    الفلاتر_الحالية: activeFilters().join(' · ') || 'لا فلاتر — كل البيانات',
+    مؤشرات:{ قيمة_المخزون:Math.round(K.invVal), الإيراد:Math.round(K.rev),
+      الربح:Math.round(K.gp), الهامش:+K.margin.toFixed(1), الدوران:+K.turn.toFixed(2),
+      صحة_المخزون:+K.health.toFixed(1), عدد_المنتجات:VIEW.rows.length },
+    توزيع_الحالات: cnt,
+    الجامد:{ قيمة_راكد_ومتقادم:Math.round(K.deadV), عدد:K.deadN,
+      قيمة_بطيء:Math.round(K.slowV), رصيد_سالب_قيمة:Math.round(K.negV), رصيد_سالب_عدد:K.negN },
+    أعلى_5_جامد: dead5,
+    أفضل_فرع:{الاسم:bs[0]?.name, إيراده:Math.round(bs[0]?.rev||0)},
+    أضعف_فرع:{الاسم:bs[bs.length-1]?.name, إيراده:Math.round(bs[bs.length-1]?.rev||0)},
+    أعلى_موردين: sup,
+    قواعد:{ راكد:'بلا بيع ≥90 يومًا (القاعدة الأساسية، بعد الاستبعادات)', متقادم:'≥180',
+      بطيء:'إنذار مبكر دون الـ90 حصرًا — عتبات سعرية 30/45/60/75',
+      الدوران:'تكلفة المبيعات ÷ متوسط المخزون الشهري' },
+  };
+}
+
+/* ── محرك الرؤى المحلي: حتمي، يجيب من محرك اللوحة مباشرة ── */
+const norm = s => String(s).replace(/[\u064B-\u0652\u0670]/g,'')
+  .replace(/[أإآ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه').toLowerCase();
+function localAnswer(q){
+  const nq = norm(q);
+  const K = kpis();
+  const has = (...ws) => ws.some(w=>nq.includes(norm(w)));
+  const hasAll = (...ws) => ws.every(w=>nq.includes(norm(w)));
+  const M = v => F.format(Math.round(v)) + ' ر.س';
+  const ctxLine = activeFilters().length
+    ? `\n\n_(ضمن التصفية الحالية: ${activeFilters().join(' · ')})_` : '';
+
+  /* منتج بكود */
+  const code = q.match(/\d{5,}/);
+  if(code){
+    const x = VIEW.rows.find(r=>r.c===code[0]) ||
+              (byCode.get(code[0]) && VIEW.all.find(r=>r.c===code[0]));
+    if(x) return `**${x.n.trim()}** (${x.c})\n• الحالة: ${x.lc} · ABC: ${x.abc}${x.xyz!=='—'?' · XYZ: '+x.xyz:''}\n• المخزون: ${F1.format(x.q)} بقيمة ${M(x.v)}\n• مبيعات الفترة: ${F1.format(x.sq)} بإيراد ${M(x.rev)} وهامش ${x.mg}%\n• آخر بيع قبل ${x.ds>=9999?'— لم يُبع':x.ds+' يومًا'}\n\nافتح بطاقته من جدول المنتجات لتفاصيل التوزيع على الفروع.`;
+    return `لم أجد الكود ${code[0]} ضمن التصفية الحالية — جرّب مسح الفلاتر أو تأكد من الكود.`;
+  }
+  if(has('راكد','جامد','متقادم','ميت')){
+    const top = VIEW.rows.filter(x=>['راكد','متقادم'].includes(x.lc))
+      .sort((a,b)=>b.v-a.v).slice(0,3);
+    return `**رأس المال المعطّل: ${M(K.deadV)}** في ${F.format(K.deadN)} منتجًا (راكد+متقادم)، ` +
+      `ومعه بطيء بقيمة ${M(K.slowV)}.\n\nأعلى 3 بالقيمة:\n` +
+      top.map((x,i)=>`${i+1}. ${x.n.trim().slice(0,34)} — ${M(x.v)} · ${x.lc} · ${x.ds} يومًا بلا بيع`).join('\n') +
+      `\n\n**التوصية:** ابدأ بالمتقادم (تصفية فورية) ثم خصوم مدروسة للراكد قبل انزلاقه.` + ctxLine;
+  }
+  if(hasAll('فرع','افضل') || hasAll('فرع','اعلي') || hasAll('فرع','اقوي')){
+    const b = branchStats().slice().sort((a,b2)=>b2.rev-a.rev)[0];
+    return `**أفضل فرع بالإيراد: ${b.name}** — ${M(b.rev)} إيرادًا` +
+      (b.deadV>0?`، مع تنبيه: لديه جامد بقيمة ${M(b.deadV)}.`:'.') + ctxLine;
+  }
+  if(hasAll('فرع','اسوا') || hasAll('فرع','اضعف') || hasAll('فرع','اقل')){
+    const arr = branchStats().slice().sort((a,b2)=>a.rev-b2.rev);
+    const b = arr[0];
+    return `**أضعف فرع بالإيراد: ${b.name}** — ${M(b.rev)} فقط. راجع تشكيلته ومخزونه الجامد (${M(b.deadV)}).` + ctxLine;
+  }
+  if(has('سالب')){
+    return `**الرصيد السالب: ${F.format(K.negN)} منتجًا بقيمة ${M(Math.abs(K.negV))}** — ` +
+      `خلل سجلات لا نقص بضاعة؛ الشراء لن يحلّه. متركّز في مستودع المشاريع.\n**الإجراء:** جرد فعلي وتسوية في أودو قبل أي طلب شراء لهذه الأصناف.` + ctxLine;
+  }
+  if(has('دوران')){
+    return `**معدل الدوران: ${K.turn.toFixed(2)}** (تكلفة المبيعات ÷ متوسط المخزون الشهري ${M(D.audit.avg_inv)}) ` +
+      `أي ≈ ${(K.turn*2).toFixed(1)} سنويًا. أقل من 2 سنويًا يعني رأس مال بطيء الحركة — ` +
+      `ارفعه بتصريف الجامد (${M(K.deadV)}) وضبط كميات إعادة الطلب.` + ctxLine;
+  }
+  if(has('صحه','صحة')){
+    return `**صحة المخزون: ${K.health.toFixed(1)}/100** — تفكيكها: حصة النشط 50% · الدوران 25% · ` +
+      `عقوبات الجامد 10% والبطيء 8% والسالب 7%.\nأكبر خصمين عندك: الجامد (${M(K.deadV)}) والسالب (${F.format(K.negN)} صنفًا). صفحة «صحة المخزون» تعرض المساهمات رقمًا رقمًا.` + ctxLine;
+  }
+  if(has('مورد','موردين')){
+    const s = supplierStats()[0];
+    const risky = supplierStats().slice().sort((a,b2)=>b2.risk-a.risk)[0];
+    return `أكبر مورد إنفاقًا: **${s.n}** (${M(s.spend)}). ` +
+      `أعلى مخاطرة: **${risky.n}** (${Math.round(risky.risk)}/100 — ${Math.round(risky.deadPct)}% من مخزونه جامد).\n` +
+      `افتح صفحة الموردين وانقر أي مورد لحفر تفصيلي بتنبيهاته وتوصياته.` + ctxLine;
+  }
+  if(has('توصي','افعل','اقترح','خطه','خطة')){
+    return `**أولوياتك الثلاث الآن:**\n1. جرد وتسوية ${F.format(K.negN)} صنفًا برصيد سالب (${M(Math.abs(K.negV))}) — يشوّه كل الأرقام.\n2. تصفية فورية للمتقادم: ${M(VIEW.rows.filter(x=>x.lc==='متقادم').reduce((s,x)=>s+x.v,0))}.\n3. حملة خصوم للراكد قبل تقادمه.\nصفحتا «التوصيات» و«فرص التحويل» تعرضان البنود منتجًا منتجًا مع القيم المحرَّرة.` + ctxLine;
+  }
+  if(has('كم','عدد') && has('منتج','صنف','يظهر')){
+    return `يظهر الآن **${F.format(VIEW.rows.length)} منتجًا** ضمن ${activeFilters().length?'التصفية الحالية: '+activeFilters().join(' · '):'كل البيانات (بلا فلاتر)'}.`;
+  }
+  if(has('فلتر','تصفيه','تصفية الحاليه')){
+    return activeFilters().length
+      ? `الفلاتر المطبقة الآن: ${activeFilters().join(' · ')} — والعرض ${F.format(VIEW.rows.length)} منتجًا.`
+      : 'لا فلاتر مطبقة — تعرض اللوحة كل البيانات (5,482 منتجًا).';
+  }
+  /* افتراضي: نظرة عامة */
+  return `**نظرة سريعة${activeFilters().length?' (ضمن التصفية الحالية)':''}:** ${F.format(VIEW.rows.length)} منتجًا · مخزون ${M(K.invVal)} · ` +
+    `إيراد ${M(K.rev)} بهامش ${K.margin.toFixed(1)}% · دوران ${K.turn.toFixed(2)} · صحة ${K.health.toFixed(1)}/100.\n` +
+    `أبرز ما يستحق انتباهك: جامد ${M(K.deadV)} وسالب ${F.format(K.negN)} صنفًا.\n\nجرّب الأسئلة المقترحة أدناه أو اسأل عن منتج بكوده.`;
+}
+
+/* ── Claude API (بيئة وسيطة) مع مهلة ── */
+async function askClaude(q){
+  const ctx = JSON.stringify(aiContext());
+  const hist = HIST.slice(-6).map(m => ({role: m.role, content: m.text}));
+  const ctrl = new AbortController();
+  const to = setTimeout(()=>ctrl.abort(), 20000);
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method:'POST', signal: ctrl.signal,
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({
+      model:'claude-sonnet-4-6', max_tokens:1000,
+      messages:[...hist, {role:'user', content:
+`أنت مساعد تحليل مخزون لشركة الضبيبي التجارية (تجزئة أثاث، السعودية). أجب بالعربية باختصار مهني (≤180 كلمة)، بأرقام من السياق فقط دون اختلاق، وبتوصية عملية عند اللزوم. السياق المجمّع (لا بيانات خام):
+${ctx}
+
+سؤال المستخدم: ${q}`}],
+    }),
+  });
+  clearTimeout(to);
+  if(!res.ok) throw new Error('HTTP '+res.status);
+  const data = await res.json();
+  const txt = (data.content||[]).map(x=>x.type==='text'?x.text:'').join('').trim();
+  if(!txt) throw new Error('empty');
+  return txt;
+}
+
+/* ── واجهة المحادثة ── */
+const QUICK = ['ما وضع المخزون الراكد؟','أي فرع الأفضل أداءً؟','لخّص الرصيد السالب',
+               'اشرح معدل الدوران','ما أولوياتي هذا الأسبوع؟'];
+
+function md(t){                      // Markdown مصغّر آمن
+  return esc(t)
+    .replace(/\*\*(.+?)\*\*/g,'<b>$1</b>')
+    .replace(/_\((.+?)\)_/g,'<span class="ai-note">($1)</span>')
+    .replace(/^(\d+)\. (.+)$/gm,'<div class="ai-li"><b>$1.</b> $2</div>')
+    .replace(/^• (.+)$/gm,'<div class="ai-li">• $1</div>')
+    .replace(/\n/g,'<br>');
+}
+function pushMsg(role, text, meta){
+  HIST.push({role, text});
+  const box = document.getElementById('aiMsgs');
+  const d = document.createElement('div');
+  d.className = 'ai-msg ' + (role==='user'?'me':'bot');
+  d.innerHTML = (role==='assistant'?`<div class="ai-src">${meta==='claude'?'🤖 Claude AI':'⚙️ المحرك المحلي'}</div>`:'') + md(text);
+  box.appendChild(d);
+  box.scrollTop = box.scrollHeight;
+}
+function typing(on){
+  let el = document.getElementById('aiTyping');
+  if(on){
+    if(el) return;
+    el = document.createElement('div');
+    el.id='aiTyping'; el.className='ai-msg bot';
+    el.innerHTML='<span class="ai-dots"><i></i><i></i><i></i></span>';
+    document.getElementById('aiMsgs').appendChild(el);
+    el.scrollIntoView({block:'end'});
+  } else el?.remove();
+}
+async function ask(q){
+  if(BUSY || !q.trim()) return;
+  BUSY = true;
+  const inp = document.getElementById('aiInput');
+  inp.value=''; inp.disabled = true;
+  document.getElementById('aiSend').disabled = true;
+  pushMsg('user', q.trim());
+  typing(true);
+  let ans, mode = AI_MODE;
+  if(mode !== 'local'){
+    try { ans = await askClaude(q.trim()); mode = AI_MODE = 'claude'; }
+    catch(e){ mode = AI_MODE = 'local'; }
+  }
+  if(!ans){ await new Promise(r=>setTimeout(r, 350));   // إحساس طبيعي
+    ans = localAnswer(q.trim()); }
+  typing(false);
+  pushMsg('assistant', ans, mode);
+  setBadge();
+  BUSY = false; inp.disabled = false;
+  document.getElementById('aiSend').disabled = false;
+  inp.focus();
+}
+function setBadge(){
+  const b = document.getElementById('aiBadge');
+  if(!b) return;
+  if(AI_MODE==='claude'){ b.textContent='Claude AI متصل'; b.className='ai-badge on'; }
+  else if(AI_MODE==='local'){ b.textContent='محرك محلي — بلا اتصال'; b.className='ai-badge local'; }
+  else { b.textContent='جاهز'; b.className='ai-badge'; }
+}
+function openAI(){
+  document.getElementById('aiPanel').classList.add('on');
+  document.getElementById('aiFab').setAttribute('aria-expanded','true');
+  if(!HIST.length){
+    pushMsg('assistant',
+      'مرحبًا! أنا مساعد تحليل المخزون. أجيب من أرقام لوحتك الحالية — بفلاترها — عن الراكد والفروع والدوران والموردين وأي منتج بكوده.\nجرّب سؤالًا مقترحًا أو اكتب سؤالك.', AI_MODE||'local');
+    HIST.length = 0;               // الترحيب لا يدخل سياق النموذج
+  }
+  setBadge();
+  setTimeout(()=>document.getElementById('aiInput').focus(), 250);
+}
+function closeAI(){
+  document.getElementById('aiPanel').classList.remove('on');
+  document.getElementById('aiFab').setAttribute('aria-expanded','false');
+}
+function clearAI(){
+  HIST.length = 0;
+  document.getElementById('aiMsgs').innerHTML = '';
+  AI_MODE = AI_MODE==='claude' ? 'claude' : null;
+  openAI();
+}
+
+/* ── التركيب ── */
+function mountAI(){
+  if(document.getElementById('aiFab')) return;
+  const fab = document.createElement('button');
+  fab.id='aiFab'; fab.className='ai-fab'; fab.type='button';
+  fab.setAttribute('aria-label','المساعد الذكي'); fab.setAttribute('aria-expanded','false');
+  fab.innerHTML='✦<span class="ai-fab-lbl">اسأل</span>';
+  fab.onclick = () => document.getElementById('aiPanel').classList.contains('on') ? closeAI() : openAI();
+  document.body.appendChild(fab);
+
+  const p = document.createElement('div');
+  p.id='aiPanel'; p.className='ai-panel'; p.setAttribute('role','dialog');
+  p.setAttribute('aria-label','المساعد الذكي لتحليل المخزون');
+  p.innerHTML = `
+    <div class="ai-head">
+      <div><b>المساعد الذكي</b><span id="aiBadge" class="ai-badge">جاهز</span></div>
+      <div class="ai-hacts">
+        <button type="button" id="aiClear" title="محادثة جديدة">⟳</button>
+        <button type="button" id="aiClose" title="إغلاق">✕</button>
+      </div>
+    </div>
+    <div class="ai-priv">يُرسَل ملخص مجمّع فقط (~2KB) — لا بياناتك الخام · الذاكرة للجلسة فقط</div>
+    <div id="aiMsgs" class="ai-msgs" aria-live="polite"></div>
+    <div class="ai-quick">${QUICK.map(q=>`<button type="button" class="ai-q">${q}</button>`).join('')}</div>
+    <form class="ai-inrow" id="aiForm">
+      <input id="aiInput" type="text" autocomplete="off" placeholder="اسأل عن مخزونك…"
+             aria-label="سؤالك للمساعد">
+      <button type="submit" id="aiSend" aria-label="إرسال">↰</button>
+    </form>`;
+  document.body.appendChild(p);
+  document.getElementById('aiClose').onclick = closeAI;
+  document.getElementById('aiClear').onclick = clearAI;
+  document.getElementById('aiForm').onsubmit = e => { e.preventDefault();
+    ask(document.getElementById('aiInput').value); };
+  p.querySelectorAll('.ai-q').forEach(b => b.onclick = () => ask(b.textContent));
+  document.addEventListener('keydown', e => { if(e.key==='Escape') closeAI(); });
+}
+window.AI = { open: openAI, close: closeAI, ask, localAnswer, aiContext, _hist: HIST,
+              _mode: () => AI_MODE, _setMode: m => { AI_MODE = m; } };
+if(document.readyState !== 'loading') mountAI();
+else document.addEventListener('DOMContentLoaded', mountAI);
+})();
 
 </script>
 </body>
